@@ -1,0 +1,79 @@
+{% extends "dashboard.html" %}
+{% block content %}
+<section class="content">
+  <div class="row">
+      <div class="col">
+          <div class="card">
+            <div class="card-header">
+              <div class="row">
+                <div class="col">
+                  <h2 class="card-title">Contributor</h2>
+                </div>
+                <div class="col">
+                  <a href="" class="btn btn-success" style="margin-left: 80%;">+ Add Contributor</a>
+                </div>
+              </div>
+            </div>
+            <!-- /.card-header -->
+            <div class="card-body">
+              <table class="table table-striped">
+                <thead>
+                  <tr>
+                    <th style="width: 10px">No</th>
+                    <th>Name</th>
+                    <th>Description</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for c in contributors %}
+                  <tr>
+                    <td>{{forloop.counter}}</td>
+                    <td>{{c.name}}</td>
+                    <td>{{c.description}}</td>
+                    <td>
+                      <div class="form-group" style='margin-left: 82%;'>
+                        <a href="" class="btn btn-primary">
+                          <i class="far fa-edit"></i>
+                        </a>
+                        <a href="" class="btn btn-danger">
+                          <i class="far fa-trash"></i>
+                        </a>
+                      </div>
+                    </td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+            <!-- /.card-body -->
+            <div class="card-footer clearfix">
+              <ul class="pagination pagination-sm m-0 float-right">
+                {% if contributor.has_previous %}
+                <li class="page-item"><a class="page-link" href="?page={{contributor.number|add:'-1'}}">&laquo;</a></li>
+                {% else %}
+                <li class="page-item disabled"><a class="page-link" href="#">&laquo;</a></li>
+                {% endif %}
+                {% for i in range %}
+                  {% if i == contributor.number %}
+                  <li class="page-item active"><a class="page-link" href="?page={{i}}">
+                    {{i}}
+                  </a></li>
+                  {% else %}
+                  <li class="page-item"><a class="page-link" href="?page={{i}}">
+                    {{i}}
+                  </a></li>
+                  {% endif %}
+                {% endfor %}
+                {% if contributor.has_next %}
+                <li class="page-item"><a class="page-link" href="?page={{contributor.number|add:'+1'}}">&raquo;</a></li>
+                {% else %}
+                <li class="page-item disabled"><a class="page-link" href="#">&raquo;</a></li>
+                {% endif %}
+              </ul>
+            </div>
+          </div>
+        </div>
+  </div>
+</section>
+{% endblock content %}

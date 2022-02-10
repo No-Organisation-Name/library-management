@@ -20,6 +20,7 @@ from django.conf import settings
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('book/', include('apps.book.urls'))
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.STATIC_URL)
