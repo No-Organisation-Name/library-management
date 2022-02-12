@@ -3,9 +3,10 @@ from django.urls import reverse
 from django.views import View
 from .models import Contributor
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from .forms import AddContributorForm
+from .forms import AddContributorForm, EditContributorForm
 
 class ContributorListView(View):
+    template_name = 'contributor/contributor_list.html'
     def get(self, request):
         obj_list = Contributor.objects.all()
         paginator = Paginator(obj_list, 5)
@@ -18,7 +19,7 @@ class ContributorListView(View):
         except EmptyPage:
             contributor = paginator.page(paginator.num_pages)
 
-        return render(request, 'contributor/contributor_list.html', {
+        return render(request, self.template_name, {
             'contributors': contributor.object_list,
             'contributor': contributor,
             'range': paginator.page_range,
@@ -32,6 +33,31 @@ class ContributorListView(View):
         print("Ini form", form)
         if form.is_valid():
             contributor = Contributor()
+            contributor.name = form.cleaned_data['name']
+            contributor.description = form.cleaned_data['description']
+            contributor.save()
+        return redirect(reverse('contributor_list'))
+
+
+class ContributorEditView(View):
+    template_name = 'contributor/contributor_edit.html'
+
+    def get(self, request, id):
+        contributor = Contributor.objects.get(id=id)
+        data = {
+            'name': contributor.name,
+            'description': contributor.description,
+        }
+        form_edit = EditContributorForm(initial=data)
+        return render(request, self.template_name, {
+            'form_edit': form_edit,
+            'id': id,
+        })
+
+    def post(self, request, id):
+        contributor = Contributor.objects.get(id=id)
+        form = EditContributorForm(request.POST)
+        if form.is_valid():
             contributor.name = form.cleaned_data['name']
             contributor.description = form.cleaned_data['description']
             contributor.save()
