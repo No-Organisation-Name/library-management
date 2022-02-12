@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.views import View
 from .models import Contributor
+from django.contrib import messages
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from .forms import AddContributorForm, EditContributorForm
 
@@ -61,4 +62,10 @@ class ContributorEditView(View):
             contributor.name = form.cleaned_data['name']
             contributor.description = form.cleaned_data['description']
             contributor.save()
+        return redirect(reverse('contributor_list'))
+
+class DeleteContributorView(View):
+    def get(self, request, id):
+        contributor = Contributor.objects.get(id=id)
+        contributor.delete()
         return redirect(reverse('contributor_list'))
