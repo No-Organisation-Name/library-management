@@ -102,6 +102,27 @@ class CategoryListView(View):
             category.save()
         return redirect(reverse('category_list'))
 
+class CategoryEditView(View):
+    templates_name = 'category/category_edit.html'
+    def get(self, request, id):
+        category = Category.objects.get(id=id)
+        data = {
+            'name': category.name,
+        }
+        form_edit = AddCategoryForm(initial=data)
+        return render(request, self.templates_name, {
+            'form_edit': form_edit,
+            'id': id,
+        })
+
+    def post(self, request, id):
+        category = Category.objects.get(id=id)
+        form = AddCategoryForm(request.POST)
+        if form.is_valid():
+            category.name = form.cleaned_data['name']
+            category.save()
+        return redirect(reverse('category_list'))
+
 
 class DeleteCategoryView(View):
     def get(self, request, id):
