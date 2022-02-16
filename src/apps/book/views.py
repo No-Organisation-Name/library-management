@@ -91,3 +91,10 @@ class CategoryListView(View):
             'range': paginator.page_range,
             'page_now': categories.number,
         })
+
+
+class DeleteCategoryView(View):
+    def get(self, request, id):
+        category = Category.objects.get(id=id)
+        category.delete()
+        return redirect(reverse('category_list'))

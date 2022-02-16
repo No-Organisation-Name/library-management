@@ -21,6 +21,8 @@
                   <tr>
                     <th style="width: 10px">No</th>
                     <th>Name</th>
+                    <th>Create ar</th>
+                    <th>Update at</th>
                     <th></th>
                   </tr>
                 </thead>
@@ -29,12 +31,14 @@
                   <tr>
                     <td>{{forloop.counter}}</td>
                     <td>{{c.name}}</td>
+                    <td>{{c.create_at}}</td>
+                    <td>{{c.update_at}}</td>
                     <td>
-                      <div class="form-group" style='margin-left: 82%;'>
+                      <div class="form-group" style='margin-left: 61%;'>
                         <a href="{% url 'contributor_edit' id=c.id %}" class="btn btn-primary">
                           <i class="far fa-edit"></i>
                         </a>
-                        <a href="{% url 'contributor_delete' c.id %}" class="btn btn-danger">
+                        <a href="{% url 'category_delete' c.id %}" class="btn btn-danger">
                           <i class="far fa-trash"></i>
                         </a>
                       </div>
@@ -107,6 +111,3 @@
   <!-- /.modal-dialog -->
 </div>
 {% endblock content %}
-{% block js %}
-  
-{% endblock js %}
