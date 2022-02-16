@@ -21,3 +21,10 @@ class EditContributorForm(forms.Form):
         'class': 'form-control',
         'placeholder': 'Description'
     }))
+
+
+class AddCategoryForm(forms.Form):
+    name = forms.CharField(label='Name', max_length=50, widget=forms.TextInput(attrs={
+        'class': 'form-control',
+        'placeholder': 'Name'
+    }))

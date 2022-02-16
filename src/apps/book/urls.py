@@ -9,5 +9,6 @@ urlpatterns = [
     path('contributor/<int:id>/delete', DeleteContributorView.as_view(), name='contributor_delete'),
 
     path('category/', CategoryListView.as_view(), name='category_list'),
+    path('category/save', CategoryListView.as_view(), name='category_save'),
     path('category/<int:id>/delete', DeleteCategoryView.as_view(), name='category_delete'),
 ]

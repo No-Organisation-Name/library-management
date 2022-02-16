@@ -3,7 +3,7 @@ from django.urls import reverse
 from django.views import View
 from .models import Contributor, Category
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from .forms import AddContributorForm, EditContributorForm
+from .forms import AddContributorForm, AddCategoryForm, EditContributorForm
 
 
 class ContributorListView(View):
@@ -78,6 +78,7 @@ class CategoryListView(View):
     def get(self, request):
         obj_list = Category.objects.all()
         paginator = Paginator(obj_list, 5)
+        form = AddCategoryForm(request.POST)
         page = request.GET.get('page')
         try:
             categories = paginator.page(page)
@@ -90,7 +91,16 @@ class CategoryListView(View):
             'category': categories,
             'range': paginator.page_range,
             'page_now': categories.number,
+            'form': form,
         })
+
+    def post(self, request):
+        form = AddCategoryForm(request.POST)
+        if form.is_valid():
+            category = Category()
+            category.name = form.cleaned_data['name']
+            category.save()
+        return redirect(reverse('category_list'))
 
 
 class DeleteCategoryView(View):
