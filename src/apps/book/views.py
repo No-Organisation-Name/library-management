@@ -1,10 +1,10 @@
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.views import View
-from .models import Contributor
-from django.contrib import messages
+from .models import Contributor, Category
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from .forms import AddContributorForm, EditContributorForm
+
 
 class ContributorListView(View):
     template_name = 'contributor/contributor_list.html'
@@ -64,8 +64,30 @@ class ContributorEditView(View):
             contributor.save()
         return redirect(reverse('contributor_list'))
 
+
 class DeleteContributorView(View):
     def get(self, request, id):
         contributor = Contributor.objects.get(id=id)
         contributor.delete()
         return redirect(reverse('contributor_list'))
+
+
+class CategoryListView(View):
+    templates_name = 'category/category_list.html'
+
+    def get(self, request):
+        obj_list = Category.objects.all()
+        paginator = Paginator(obj_list, 5)
+        page = request.GET.get('page')
+        try:
+            categories = paginator.page(page)
+        except PageNotAnInteger:
+            categories = paginator.page(1)
+        except EmptyPage:
+            categories = paginator.page(paginator.num_pages)
+        return render(request, self.templates_name, {
+            'categories': categories.object_list,
+            'category': categories,
+            'range': paginator.page_range,
+            'page_now': categories.number,
+        })
