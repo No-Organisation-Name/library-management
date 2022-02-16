@@ -133,3 +133,4 @@ dmypy.json
 !**/migrations/__init__.py
 
 src/.idea/
+src/media/
