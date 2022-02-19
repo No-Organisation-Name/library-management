@@ -3,8 +3,9 @@ from django.urls import reverse
 from django.views import View
 from .models import Contributor, Category, Book
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from .forms import AddContributorForm, AddCategoryForm, EditContributorForm
-
+from .forms import AddContributorForm, AddCategoryForm,  AddBookForm, EditContributorForm
+import datetime
+from django.http import HttpResponse
 
 class ContributorListView(View):
     template_name = 'contributor/contributor_list.html'
@@ -30,8 +31,6 @@ class ContributorListView(View):
 
     def post(self, request):
         form = AddContributorForm(request.POST)
-        print("INi request", request.POST)
-        print("Ini form", form)
         if form.is_valid():
             contributor = Contributor()
             contributor.name = form.cleaned_data['name']
@@ -138,6 +137,7 @@ class BookListView(View):
         obj_list = Book.objects.all()
         paginator = Paginator(obj_list, 5)
         page = request.GET.get('page')
+        form = AddBookForm(request.POST)
         try:
             books = paginator.page(page)
         except PageNotAnInteger:
@@ -149,5 +149,34 @@ class BookListView(View):
             'book': books,
             'range': paginator.page_range,
             'page_now': books.number,
+            'form': form,
         })
 
+    def post(self, request):
+        form = AddBookForm(request.POST, request.FILES)
+        category = Category.objects.get(id=request.POST['category'])
+        if form.is_valid():
+            print("Valid Cuy")
+            book = Book()
+            try:
+                contributor = Contributor.objects.get(id=form.cleaned_data['contributor'])
+                book.contributor = contributor
+            except:
+                pass
+            book.category = category
+            book.title = form.cleaned_data['title']
+            book.description = form.cleaned_data['description']
+            book.publisher = form.cleaned_data['publisher']
+            book.publication_year = form.cleaned_data['publication_year']
+            book.language = form.cleaned_data['language']
+            book.isbn = form.cleaned_data['isbn']
+            book.date_of_entry = datetime.datetime.strptime(form.cleaned_data['date_of_entry'], "%Y-%m-%d %H:%M")
+            book.image = request.FILES['image']
+            book.save()
+        else:
+            return HttpResponse(form.errors)
+        return redirect(reverse('book_list'))
+
+
+def test(request):
+    return render(request, 'contributor/test.html')

@@ -1,6 +1,7 @@
 {% extends "dashboard.html" %}
 {% block content %}
 <section class="content">
+  
   <div class="row">
       <div class="col">
           <div class="card">
@@ -10,7 +11,7 @@
                   <h2 class="card-title">Books</h2>
                 </div>
                 <div class="col">
-                  <a href="" data-toggle="modal" data-target="#modal-lg" class="btn btn-success" style="margin-left: 80%;">+ Add Contributor</a>
+                  <a href="" data-toggle="modal" data-target="#modal-lg" class="btn btn-success" style="margin-left: 80%;">+ Add Book</a>
                 </div>
               </div>
             </div>
@@ -91,21 +92,65 @@
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
       <div class="modal-header">
-        <h4 class="modal-title">Add Contributor</h4>
+        <h4 class="modal-title" style="text-align:center">Add Book</h4>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
       <div class="modal-body">
-        <form action="" method="POST">
+        <form action="{% url 'book_save' %}" method="POST" enctype="multipart/form-data">
           {% csrf_token %}
           <div class="form-group">
-            <label for="">{{form.name.label}}</label>
-            {{form.name}}
+            <label for="">{{form.contributor.label}}</label>
+            {{form.contributor}}
+          </div>
+          <div class="form-group">
+            <label for="">{{form.category.label}}</label>
+            {{form.category}}
+          </div>
+          <div class="form-group">
+            <label for="">{{form.title.label}}</label>
+            {{form.title}}
           </div>
           <div class="form-group">
             <label for="">{{form.description.label}}</label>
             {{form.description}}
+          </div>
+          <div class="form-group">
+            <label for="">{{form.publisher.label}}</label>
+            {{form.publisher}}
+          </div>
+          <div class="form-group">
+            <label for="">{{form.language.label}}</label>
+            {{form.language}}
+          </div>
+          <div class="form-group">
+            <label for="">{{form.isbn.label}}</label>
+            {{form.isbn}}
+          </div>
+          <div class="form-group">
+            <label>{{form.publication_year.label}}</label>
+              <div class="input-group date" id="publication_year" data-target-input="nearest">
+                  {{form.publication_year}}
+                  <div class="input-group-append" data-target="#publication_year" data-toggle="datetimepicker">
+                      <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                  </div>
+              </div>
+          </div>
+          <div class="form-group">
+            <label>{{form.date_of_entry.label}}</label>
+              <div class="input-group date" id="date_of_entry" data-target-input="nearest">
+                  {{form.date_of_entry}}
+                  <div class="input-group-append" data-target="#date_of_entry" data-toggle="datetimepicker">
+                      <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                  </div>
+              </div>
+          </div>
+          
+          </div>
+          <div class="form-group">
+            <label for="">{{form.image.label}}</label>
+            {{form.image}}
           </div>
           <div class="modal-footer justify-content-between">
             <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
@@ -114,9 +159,27 @@
         </form>
       </div>
       
+      
     </div>
     <!-- /.modal-content -->
   </div>
   <!-- /.modal-dialog -->
 </div>
+<script>
+  $(function () {
+    $('#date_of_entry').datetimepicker({
+        format: 'YYYY-MM-DD hh:mm',
+        icons: { time: 'far fa-clock' }
+    });
+
+    $('#publication_year').datetimepicker({
+        format: 'YYYY',
+    });
+      
+    });
+</script>
 {% endblock content %}
+
+{% block js %}
+
+{% endblock js %}

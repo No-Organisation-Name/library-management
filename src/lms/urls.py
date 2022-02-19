@@ -17,10 +17,10 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf.urls.static import static
 from django.conf import settings
+from apps.book.views import test
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('book/', include('apps.book.urls'))
+    path('book/', include('apps.book.urls')),
+    path('test/', test),
 ]
-if settings.DEBUG:
-    urlpatterns += static(settings.STATIC_URL)

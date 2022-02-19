@@ -37,7 +37,7 @@ class Book(models.Model):
     publication_year = models.CharField(max_length=5)
     create_at = models.DateTimeField(auto_now_add=True)
     update_at = models.DateTimeField(auto_now=True)
-    date_of_entry = models.DateField()
+    date_of_entry = models.DateTimeField()
     image = models.ImageField(upload_to='books/', blank=True)
 
     def __str__(self):

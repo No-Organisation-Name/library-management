@@ -16,4 +16,5 @@ urlpatterns = [
 
 
     path('', BookListView.as_view(), name='book_list'),
+    path('save', BookListView.as_view(), name='book_save'),
 ]
