@@ -3,7 +3,7 @@ from django.urls import reverse
 from django.views import View
 from .models import Contributor, Category, Book
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from .forms import AddContributorForm, AddCategoryForm,  AddBookForm, EditContributorForm
+from .forms import *
 import datetime
 from django.http import HttpResponse
 
@@ -204,7 +204,7 @@ class UpdateBookView(View):
 
     def post(self, request, id):
         book = Book.objects.get(id=id)
-        form = AddBookForm(request.POST, request.FILES)
+        form = BookFormEdit(request.POST, request.FILES)
         category = Category.objects.get(id=request.POST['category'])
         if form.is_valid():
             try:
