@@ -177,6 +177,12 @@ class BookListView(View):
             return HttpResponse(form.errors)
         return redirect(reverse('book_list'))
 
+class DeleteBookView(View):
+    def get(self, request, id):
+        book = Book.objects.get(pk=id)
+        book.delete()
+        return redirect(reverse('book_list'))
+
 
 def test(request):
     return render(request, 'contributor/test.html')
