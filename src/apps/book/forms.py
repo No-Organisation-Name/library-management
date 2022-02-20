@@ -35,6 +35,7 @@ class AddCategoryForm(forms.Form):
 
 
 class AddBookForm(forms.Form):
+    id = forms.HiddenInput()
     contributor = forms.ModelChoiceField(label='Contributor', queryset=Contributor.objects.all(), widget=forms.Select(attrs={
         'class': 'form-control',
         'placeholder': 'Contributor'
@@ -77,5 +78,5 @@ class AddBookForm(forms.Form):
         'placeholder': 'Date of Entry',
         'id': 'date_of_entry'
     }))
-    image = forms.ImageField(label='Image')
+    image = forms.ImageField(label='Image', required=False)
 

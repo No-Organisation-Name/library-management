@@ -177,6 +177,56 @@ class BookListView(View):
             return HttpResponse(form.errors)
         return redirect(reverse('book_list'))
 
+
+class UpdateBookView(View):
+    template_name = 'book/book_edit.html'
+
+    def get(self, request, id):
+        book = Book.objects.get(id =id)
+        data = {
+            'title': book.title,
+            'description': book.description,
+            'publisher': book.publisher,
+            'publication_year': book.publication_year,
+            'language': book.language,
+            'isbn': book.isbn,
+            'date_of_entry': book.date_of_entry,
+            'image': book.image,
+            'contributor': book.contributor,
+            'category': book.category,
+        }
+        form_edit = AddBookForm(initial=data)
+        print(form_edit)
+        return render(request, self.template_name, {
+            'form_edit': form_edit,
+            'id': id,
+        })
+
+    def post(self, request, id):
+        book = Book.objects.get(id=id)
+        form = AddBookForm(request.POST, request.FILES)
+        category = Category.objects.get(id=request.POST['category'])
+        if form.is_valid():
+            try:
+                contributor = Contributor.objects.get(id=form.cleaned_data['contributor'])
+                book.contributor = contributor
+                book.image = request.FILES['image']
+            except:
+                pass
+            book.category = category
+            book.title = form.cleaned_data['title']
+            book.description = form.cleaned_data['description']
+            book.publisher = form.cleaned_data['publisher']
+            book.publication_year = form.cleaned_data['publication_year']
+            book.language = form.cleaned_data['language']
+            book.isbn = form.cleaned_data['isbn']
+            book.date_of_entry = datetime.datetime.strptime(form.cleaned_data['date_of_entry'], "%Y-%m-%d %H:%M")
+            book.save()
+        else:
+            return HttpResponse(form.errors)
+        return redirect(reverse('book_list'))
+
+
 class DeleteBookView(View):
     def get(self, request, id):
         book = Book.objects.get(pk=id)
