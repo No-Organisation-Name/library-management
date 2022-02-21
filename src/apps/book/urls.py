@@ -13,4 +13,8 @@ urlpatterns = [
     path('category/edit/<int:id>', CategoryEditView.as_view(), name='category_edit'),
     path('category/update/<int:id>', CategoryEditView.as_view(), name='category_update'),
     path('category/<int:id>/delete', DeleteCategoryView.as_view(), name='category_delete'),
+
+
+    path('', BookListView.as_view(), name='book_list'),
+    path('save', BookListView.as_view(), name='book_save'),
 ]
