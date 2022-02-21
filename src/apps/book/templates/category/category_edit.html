@@ -1,0 +1,21 @@
+{% extends "dashboard.html" %}
+{% block content %}
+<div class="row">
+    <div class="col"></div>
+    <div class="col">
+        <h1 style="text-align: center;">Edit Category of Book</h1>
+        <form action="{% url 'category_update' id %}" method="POST">
+            {% csrf_token %}
+            <div class="form-group">
+              <label for="">{{form_edit.name.label}}</label>
+              {{form_edit.name}}
+            </div>
+            <div class="modal-footer justify-content-between">
+              <a  class="btn btn-default" href="{% url 'category_list' %}" >Cancel</a>
+              <button type="submit" class="btn btn-primary">Submit</button>
+            </div>
+    </div>
+    <div class="col"></div>
+</div>
+  
+{% endblock content %}
