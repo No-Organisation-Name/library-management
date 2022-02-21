@@ -9,3 +9,15 @@ class AddContributorForm(forms.Form):
         'class': 'form-control',
         'placeholder': 'Description'
     }))
+
+
+class EditContributorForm(forms.Form):
+    id = forms.HiddenInput()
+    name = forms.CharField(label='Name', max_length=50, widget=forms.TextInput(attrs={
+        'class': 'form-control',
+        'placeholder': 'Name'
+    }))
+    description = forms.CharField(label='Description', max_length=50, widget=forms.TextInput(attrs={
+        'class': 'form-control',
+        'placeholder': 'Description'
+    }))
