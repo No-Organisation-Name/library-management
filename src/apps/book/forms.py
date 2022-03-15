@@ -1,3 +1,4 @@
+from cProfile import label
 from django import forms
 from .models import Contributor, Category
 
@@ -134,3 +135,6 @@ class BookFormEdit(forms.Form):
         'id': 'date_of_entry'
     }))
     image = forms.ImageField(label='Image', required=False)
+
+class UploadExelForm(forms.Form):
+    upload_file = forms.FileField(label='Upload File')

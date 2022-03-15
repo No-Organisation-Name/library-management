@@ -25,7 +25,7 @@ SECRET_KEY = '(t3%c(35+%ehn*5s&!+fd@tnm2e#n!rzo!oayqooaxa*kfm$u%'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['0.0.0.0']
 
 
 # Application definition
@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django_extensions',
+    'import_export',
     'apps.book',
 ]
 
@@ -131,3 +132,4 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'),
 ]
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+IMPORT_EXPORT_USE_TRANSACTIONS = True

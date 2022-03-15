@@ -4,8 +4,10 @@ from django.views import View
 from .models import Contributor, Category, Book
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from .forms import *
-import datetime
+from tablib import Dataset
 from django.http import HttpResponse
+import datetime
+import mysql.connector as msql
 
 class ContributorListView(View):
     template_name = 'contributor/contributor_list.html'
@@ -138,6 +140,7 @@ class BookListView(View):
         paginator = Paginator(obj_list, 5)
         page = request.GET.get('page')
         form = AddBookForm(request.POST)
+        form_exel = UploadExelForm()
         try:
             books = paginator.page(page)
         except PageNotAnInteger:
@@ -150,6 +153,7 @@ class BookListView(View):
             'range': paginator.page_range,
             'page_now': books.number,
             'form': form,
+            'form_exel': form_exel,
         })
 
     def post(self, request):
@@ -234,5 +238,27 @@ class DeleteBookView(View):
         return redirect(reverse('book_list'))
 
 
-def test(request):
-    return render(request, 'contributor/test.html')
+class ImportBookView(View):
+    def post(self, request):
+        con = msql.connect(
+            host='localhost', 
+            database='lms_db',
+            user='root', 
+            password='apip'
+            )
+        cursor = con.cursor()
+        form = UploadExelForm(request.POST, request.FILES)
+        print(form)
+        if form.is_valid():
+            new_data = request.FILES['upload_file']
+            dataset = Dataset()
+            import_data = dataset.load(new_data.read(), format='xls')
+            for data in import_data:
+                sql = ""f"INSERT INTO book (contributor_id, category_id, title, description, publisher, language, isbn, publication_year, create_at, update_at,date_of_entry, image) VALUES {data};"""
+                cursor.execute(sql)
+                con.commit()
+            cursor.close()
+            return redirect(reverse('book_list'))
+
+        else:
+            return HttpResponse(form.errors)
