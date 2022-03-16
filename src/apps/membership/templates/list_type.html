@@ -9,9 +9,6 @@
               <div class="col">
               </div>
               <div class="col">
-                <a href="" data-toggle="modal" data-target="#import_exel" class="btn btn-success" style="margin-left: 60%;">
-                   Import Exel <i class="far fa-file-upload"></i>
-                </a>
               </div>
               <div class="col">
                 <a href="" data-toggle="modal" data-target="#modal-lg" class="btn btn-info" style="margin-left: 68%;">+ Add Type</a>
@@ -61,13 +58,13 @@
           <!-- /.card-body -->
           <div class="card-footer clearfix">
             <ul class="pagination pagination-sm m-0 float-right">
-              {% if type_of_members.has_previous %}
-              <li class="page-item"><a class="page-link" href="?page={{type_of_members.number|add:'-1'}}">&laquo;</a></li>
+              {% if type_of_member.has_previous %}
+              <li class="page-item"><a class="page-link" href="?page={{type_of_member.number|add:'-1'}}">&laquo;</a></li>
               {% else %}
               <li class="page-item disabled"><a class="page-link" href="#">&laquo;</a></li>
               {% endif %}
               {% for i in range %}
-                {% if i == type_of_members.number %}
+                {% if i == type_of_member.number %}
                 <li class="page-item active"><a class="page-link" href="?page={{i}}">
                   {{i}}
                 </a></li>
@@ -77,8 +74,8 @@
                 </a></li>
                 {% endif %}
               {% endfor %}
-              {% if type_of_members.has_next %}
-              <li class="page-item"><a class="page-link" href="?page={{type_of_members.number|add:'+1'}}">&raquo;</a></li>
+              {% if type_of_member.has_next %}
+              <li class="page-item"><a class="page-link" href="?page={{type_of_member.number|add:'+1'}}">&raquo;</a></li>
               {% else %}
               <li class="page-item disabled"><a class="page-link" href="#">&raquo;</a></li>
               {% endif %}
@@ -92,65 +89,33 @@
 <div class="modal-dialog modal-lg">
   <div class="modal-content">
     <div class="modal-header">
-      <h4 class="modal-title" style="text-align:center">Add Book</h4>
+      <h4 class="modal-title" style="text-align:center">Add Type Of Membership</h4>
       <button type="button" class="close" data-dismiss="modal" aria-label="Close">
         <span aria-hidden="true">&times;</span>
       </button>
     </div>
     <div class="modal-body">
-      <form action="{% url 'book_save' %}" method="POST" enctype="multipart/form-data">
+      <form action="{% url 'type_save' %}" method="POST" enctype="multipart/form-data">
         {% csrf_token %}
         <div class="form-group">
-          <label for="">{{form.contributor.label}}</label>
-          {{form.contributor}}
+          <label for="">{{form.name.label}}</label>
+          {{form.name}}
         </div>
         <div class="form-group">
-          <label for="">{{form.category.label}}</label>
-          {{form.category}}
+          <label for="">{{form.span_of_time.label}}</label>
+          {{form.span_of_time}}
         </div>
         <div class="form-group">
-          <label for="">{{form.title.label}}</label>
-          {{form.title}}
+          <label for="">{{form.fine.label}}</label>
+          {{form.fine}}
         </div>
         <div class="form-group">
-          <label for="">{{form.description.label}}</label>
-          {{form.description}}
+          <label for="">{{form.amount_of_book.label}}</label>
+          {{form.amount_of_book}}
         </div>
         <div class="form-group">
-          <label for="">{{form.publisher.label}}</label>
-          {{form.publisher}}
-        </div>
-        <div class="form-group">
-          <label for="">{{form.language.label}}</label>
-          {{form.language}}
-        </div>
-        <div class="form-group">
-          <label for="">{{form.isbn.label}}</label>
-          {{form.isbn}}
-        </div>
-        <div class="form-group">
-          <label>{{form.publication_year.label}}</label>
-            <div class="input-group date" id="publication_year" data-target-input="nearest">
-                {{form.publication_year}}
-                <div class="input-group-append" data-target="#publication_year" data-toggle="datetimepicker">
-                    <div class="input-group-text"><i class="fa fa-calendar"></i></div>
-                </div>
-            </div>
-        </div>
-        <div class="form-group">
-          <label>{{form.date_of_entry.label}}</label>
-            <div class="input-group date" id="date_of_entry" data-target-input="nearest">
-                {{form.date_of_entry}}
-                <div class="input-group-append" data-target="#date_of_entry" data-toggle="datetimepicker">
-                    <div class="input-group-text"><i class="fa fa-calendar"></i></div>
-                </div>
-            </div>
-        </div>
-        
-        </div>
-        <div class="form-group">
-          <label for="">{{form.image.label}}</label>
-          {{form.image}}
+          <label for="">{{form.cost.label}}</label>
+          {{form.cost}}
         </div>
         <div class="modal-footer justify-content-between">
           <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
