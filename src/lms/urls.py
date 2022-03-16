@@ -21,4 +21,5 @@ from django.conf import settings
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('book/', include('apps.book.urls')),
+    path('membership/', include('apps.membership.urls')),
 ]
