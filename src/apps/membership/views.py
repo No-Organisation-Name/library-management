@@ -40,6 +40,33 @@ class ListTypeView(View):
         return redirect(reverse('type_list'))
 
 
+class EditTypeView(View):
+    template_name = 'type_edit.html'
+    
+    def get(self,request, id):
+        obj = Type.objects.get(id=id)
+        data = {
+            'name':obj.name,
+            'span_of_time':obj.span_of_time,
+            'fine':obj.fine,
+            'amount_of_book':obj.amount_of_book,
+            'cost':obj.cost,
+        }
+        form_edit = AddTypeOfMemberForm(initial=data)
+        return render(request, self.template_name, {'form_edit': form_edit, 'id':id})
+
+    def post(self, request, id):
+        obj = Type.objects.get(id=id)
+        form = AddTypeOfMemberForm(request.POST)
+        if form.is_valid():
+            obj.name = form.cleaned_data['name']
+            obj.span_of_time = form.cleaned_data['span_of_time']
+            obj.fine = form.cleaned_data['fine']
+            obj.amount_of_book = form.cleaned_data['amount_of_book']
+            obj.cost = form.cleaned_data['cost']
+            obj.save()
+        return redirect(reverse('type_list'))
+
 class DeleteTypeView(View):
     def get(self,request, id):
         obj = Type.objects.get(id=id)
