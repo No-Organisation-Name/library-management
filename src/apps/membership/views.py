@@ -38,3 +38,10 @@ class ListTypeView(View):
             type_of_member.cost = form.cleaned_data['cost']
             type_of_member.save()
         return redirect(reverse('type_list'))
+
+
+class DeleteTypeView(View):
+    def get(self,request, id):
+        obj = Type.objects.get(id=id)
+        obj.delete()
+        return redirect(reverse('type_list'))
