@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import User
 
 class Type(models.Model):
     name = models.CharField(max_length=100)
@@ -15,3 +16,23 @@ class Type(models.Model):
     class Meta:
         db_table = 'type'
 
+
+class Membership(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='membership')
+    member_type = models.ForeignKey(Type, on_delete=models.CASCADE, related_name='membership')
+    nik =models.CharField(max_length=16)
+    place_of_birth = models.CharField(max_length=25)
+    date_of_birth = models.DateField()
+    gender=models.CharField(max_length=12)
+    address= models.CharField(max_length=150)
+    faith = models.CharField(max_length=45)
+    married = models.BooleanField()
+    job = models.CharField(max_length=45)
+    phone_number = models.CharField(max_length=25)
+    cost = models.CharField(max_length=15)
+
+    def __str__(self):
+        return self.user.username
+
+    class Meta:
+        db_table = 'membership'

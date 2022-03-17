@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 #import reverse 
 from django.urls import reverse
-from .models import Type
+from .models import Type, Membership
 from django.views import View
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from .forms import AddTypeOfMemberForm
@@ -72,3 +72,24 @@ class DeleteTypeView(View):
         obj = Type.objects.get(id=id)
         obj.delete()
         return redirect(reverse('type_list'))
+
+
+class ListMemberView(View):
+    template_name = 'members_list.html'
+
+    def get(self, request):
+        obj = Membership.objects.all()
+        paginator = Paginator(obj, 5)
+        page = request.GET.get('page')
+        try:
+            members = paginator.page(page)
+        except PageNotAnInteger:
+            members = paginator.page(1)
+        except EmptyPage:
+            members = paginator.page(paginator.num_pages)
+        return render(request, self.template_name,{
+            'members':members.object_list,
+            'member':members,
+            'range':paginator.page_range,
+            'page_now':members.number,
+        })

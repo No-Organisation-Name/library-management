@@ -134,8 +134,14 @@
               <ul class="nav nav-treeview">
                 <li class="nav-item">
                   <a href="{% url 'type_list' %}" class="nav-link">
-                    <i class="nav-icon fad fa-users"></i>
+                    <i class='nav-icon far fa-address-card'></i>
                     <p>Type Of Membership</p>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="{% url 'member_list' %}" class="nav-link">
+                    <i class="nav-icon fad fa-users"></i>
+                    <p>Members</p>
                   </a>
                 </li>
               </ul>
@@ -160,6 +166,7 @@
       {% block content %}
         
       {% endblock content %}
+      
       <!-- /.content -->
     </div>
     <!-- /.content-wrapper -->
