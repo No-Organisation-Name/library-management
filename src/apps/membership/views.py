@@ -1,10 +1,12 @@
 from django.shortcuts import render, redirect
 #import reverse 
 from django.urls import reverse
-from .models import Type, Membership
+from .models import Type, Membership, User
 from django.views import View
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from .forms import AddTypeOfMemberForm
+from .forms import AddTypeOfMemberForm,AddMembershipForm, EditMembershipForm
+from django.http import HttpResponse
+import datetime
 class ListTypeView(View):
     template_name = 'list_type.html'
 
@@ -81,6 +83,7 @@ class ListMemberView(View):
         obj = Membership.objects.all()
         paginator = Paginator(obj, 5)
         page = request.GET.get('page')
+        form =  AddMembershipForm()
         try:
             members = paginator.page(page)
         except PageNotAnInteger:
@@ -92,4 +95,101 @@ class ListMemberView(View):
             'member':members,
             'range':paginator.page_range,
             'page_now':members.number,
+            'form':form
         })
+
+    def post(self, request):
+        form = AddMembershipForm(request.POST)
+        if form.is_valid():
+            if request.POST['password'] == request.POST['password2']:
+                user = User()
+                user.username = form.cleaned_data['username']
+                user.password = form.cleaned_data['password']
+                user.first_name = form.cleaned_data['first_name']
+                user.last_name = form.cleaned_data['last_name']
+                try:
+                    user.email = form.cleaned_data['email']
+                except:
+                    pass
+                user.save()
+                membership = Membership()
+                membership.user = user
+                membership.member_type = form.cleaned_data['member_type']
+                membership.nik = form.cleaned_data['nik']
+                membership.place_of_birth = form.cleaned_data['place_of_birth']
+                membership.date_of_birth = form.cleaned_data['date_of_birth']
+                membership.gender = form.cleaned_data['gender']
+                membership.address = form.cleaned_data['address']
+                membership.faith = form.cleaned_data['faith']
+                membership.married = form.cleaned_data['married']
+                membership.job = form.cleaned_data['job']
+                membership.phone_number = form.cleaned_data['phone_number']
+                membership.cost = form.cleaned_data['cost'].replace('.','')
+                print("cost:",form.cleaned_data['cost'].replace('.',''))
+                membership.save()
+            else:
+                pass
+        return redirect(reverse('member_list'))
+
+class UpdateMemberView(View):
+    template_name = 'members_edit.html'
+
+    def get(self, request,id):
+        member= Membership.objects.get(id=id)
+        data ={
+            'first_name':member.user.first_name,
+            'last_name':member.user.last_name,
+            'username':member.user.username,
+            'password':'',
+            'email':member.user.email,
+            'member_type':member.member_type,
+            'nik':member.nik,
+            'place_of_birth':member.place_of_birth,
+            'date_of_birth':member.date_of_birth,
+            'gender':member.gender,
+            'faith':member.faith,
+            'married':member.married,
+            'job':member.job,
+            'address':member.address,
+            'phone_number':member.phone_number,
+            'cost':member.cost,
+        }
+        form = EditMembershipForm(initial=data)
+        print(data)
+        return render(request, self.template_name,{
+            'form':form,
+            'id':id
+        })
+    
+    def post(self, request, id):
+        form = EditMembershipForm(request.POST)
+        if form.is_valid():
+            member = Membership.objects.get(id=id)
+            user = User.objects.get(id=member.user.id)
+            user.first_name = form.cleaned_data['first_name']
+            user.last_name = form.cleaned_data['last_name']
+            user.username = form.cleaned_data['username']
+            if form.cleaned_data['password'] != '':
+                user.set_password(form.cleaned_data['password'])
+            user.save()
+            member.member_type = form.cleaned_data['member_type']
+            member.nik = form.cleaned_data['nik'].replace('_','').replace(' ','')            
+            member.place_of_birth = form.cleaned_data['place_of_birth']
+            member.date_of_birth = datetime.datetime.strptime(form.cleaned_data['date_of_birth'], "%Y-%m-%d")
+            member.gender = form.cleaned_data['gender']
+            member.faith = form.cleaned_data['faith']
+            member.married = form.cleaned_data['married']
+            member.job = form.cleaned_data['job']
+            member.address = form.cleaned_data['address']
+            member.phone_number = form.cleaned_data['phone_number'].replace('_','').replace(' ','')
+            member.cost = form.cleaned_data['cost'].replace('.','')
+            member.save()
+        else:
+            return HttpResponse(form.errors)
+        return redirect(reverse('member_list'))
+
+class DeleteMemberView(View):
+    def get(sel,request,id):
+        member = Membership.objects.get(id=id)
+        member.delete()
+        return redirect(reverse('member_list'))

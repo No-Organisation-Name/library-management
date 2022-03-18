@@ -26,7 +26,7 @@ class Membership(models.Model):
     gender=models.CharField(max_length=12)
     address= models.CharField(max_length=150)
     faith = models.CharField(max_length=45)
-    married = models.BooleanField()
+    married = models.BooleanField(default=False)
     job = models.CharField(max_length=45)
     phone_number = models.CharField(max_length=25)
     cost = models.CharField(max_length=15)
