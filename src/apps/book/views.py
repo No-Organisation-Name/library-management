@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.views import View
-from .models import Contributor, Category
+from .models import Contributor, Category, Book
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from .forms import AddContributorForm, AddCategoryForm, EditContributorForm
 
@@ -129,3 +129,25 @@ class DeleteCategoryView(View):
         category = Category.objects.get(id=id)
         category.delete()
         return redirect(reverse('category_list'))
+
+
+class BookListView(View):
+    template_name = 'book/book_list.html'
+
+    def get(self, request):
+        obj_list = Book.objects.all()
+        paginator = Paginator(obj_list, 5)
+        page = request.GET.get('page')
+        try:
+            books = paginator.page(page)
+        except PageNotAnInteger:
+            books = paginator.page(1)
+        except EmptyPage:
+            books = paginator.page(paginator.num_pages)
+        return render(request, self.template_name, {
+            'books': books.object_list,
+            'book': books,
+            'range': paginator.page_range,
+            'page_now': books.number,
+        })
+
