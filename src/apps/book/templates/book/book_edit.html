@@ -1,0 +1,99 @@
+{% extends "dashboard.html" %}
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col"></div>
+        <div class="col">
+            <h1 style="text-align: center;">Edit Book</h1>
+            <form action="{% url 'book_update' id %}" method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="">
+                        {{form_edit.contributor.label}}
+                    </label>
+                    {{form_edit.contributor}}
+                </div>
+                <div class="form-group">
+                    <label for="">
+                        {{form_edit.category.label}}
+                    </label>
+                    {{form_edit.category}}
+                </div>
+                <div class="form-group">
+                    <label for="">
+                        {{form_edit.title.label}}
+                    </label>
+                    {{form_edit.title}}
+                </div>
+                <div class="form-group">
+                    <label for="">
+                        {{form_edit.description.label}}
+                    </label>
+                    {{form_edit.description}}
+                </div>
+                <div class="form-group">
+                    <label for="">
+                        {{form_edit.publisher.label}}
+                    </label>
+                    {{form_edit.publisher}}
+                </div>
+                <div class="form-group">
+                    <label for="">
+                        {{form_edit.language.label}}
+                    </label>
+                    {{form_edit.language}}
+                </div>
+                <div class="form-group">
+                    <label for="">
+                        {{form_edit.isbn.label}}
+                    </label>
+                    {{form_edit.isbn}}
+                </div>
+                <div class="form-group">
+                    <label>{{form.publication_year.label}}</label>
+                      <div class="input-group date" id="publication_year" data-target-input="nearest">
+                          {{form_edit.publication_year}}
+                          <div class="input-group-append" data-target="#publication_year" data-toggle="datetimepicker">
+                              <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                          </div>
+                      </div>
+                  </div>
+                  <div class="form-group">
+                    <label>{{form_edit.date_of_entry.label}}</label>
+                      <div class="input-group date" id="date_of_entry" data-target-input="nearest">
+                          {{form_edit.date_of_entry}}
+                          <div class="input-group-append" data-target="#date_of_entry" data-toggle="datetimepicker">
+                              <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                          </div>
+                      </div>
+                  </div>
+                <div class="form-group">
+                    <label for="">
+                        {{form_edit.image.label}}
+                    </label>
+                    {{form_edit.image}}
+                </div>
+                <div class="form-group" style="margin-left: 55%;">
+                    <a href="{% url 'book_list' %}" class="btn btn-seccond">Cancel</a>
+                    <button class="btn btn-primary" type="submit">Submit</button>
+                </div>
+            </form>
+        </div>
+        <div class="col"></div>
+    </div>
+</div>
+<script>
+    $(function () {
+      $('#date_of_entry').datetimepicker({
+          format: 'YYYY-MM-DD hh:mm',
+          icons: { time: 'far fa-clock' }
+      });
+  
+      $('#publication_year').datetimepicker({
+          format: 'YYYY',
+      });
+        
+      });
+  </script>
+  
+{% endblock content %}
