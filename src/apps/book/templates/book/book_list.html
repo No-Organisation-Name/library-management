@@ -15,14 +15,14 @@
                   </a>
                 </div>
                 <div class="col">
-                  <a href="" data-toggle="modal" data-target="#modal-lg" class="btn btn-info" style="margin-left: 68%;">+ Add Book</a>
+                  <a href="" data-toggle="modal" data-target="#modal-lg" class="btn btn-info" style="margin-left: 93%;"><i class="fas fa-plus"></i></a>
                 </div>
               </div>
             </div>
             <!-- /.card-header -->
             <div class="card-body">
               <table class="table table-striped">
-                <thead>
+                <thead style="text-align: center;">
                   <tr>
                     <th style="width: 10px">No</th>
                     <th>TITLE</th>
@@ -33,11 +33,11 @@
                     <th></th>
                   </tr>
                 </thead>
-                <tbody>
+                <tbody style="text-align:center">
                   {% for b in books %}
                   <tr>
                     <td>{{forloop.counter}}</td>
-                    <td><a href="">
+                    <td><a href="{% url 'exemplar_list' b.id %}">
                       {{b.title}}
                     </a></td>
                     <td>{{b.description}}</td>

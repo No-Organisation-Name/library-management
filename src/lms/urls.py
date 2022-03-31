@@ -23,3 +23,4 @@ urlpatterns = [
     path('book/', include('apps.book.urls')),
     path('membership/', include('apps.membership.urls')),
 ]
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

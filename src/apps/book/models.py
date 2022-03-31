@@ -45,3 +45,32 @@ class Book(models.Model):
 
     class Meta:
         db_table = 'book'
+
+
+class BookShelf(models.Model):
+    name = models.CharField(max_length=45)
+    number = models.CharField(max_length=5)
+    row = models.CharField(max_length=1)
+    create_at = models.DateTimeField(auto_now_add=True)
+    update_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.name
+    class Meta:
+        db_table = 'bookshelf'
+
+
+class Exemplar(models.Model):
+    bookshelf = models.ForeignKey(BookShelf, on_delete=models.CASCADE, related_name='exemplars')
+    barcode = models.CharField(max_length=25)
+    book = models.ForeignKey(Book, on_delete=models.CASCADE, related_name='exemplars')
+    status = models.BooleanField(default=True)
+    at_row = models.CharField(max_length=1)
+    create_at = models.DateTimeField(auto_now_add=True)
+    update_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.barcode
+
+    class Meta:
+        db_table = 'exemplar'

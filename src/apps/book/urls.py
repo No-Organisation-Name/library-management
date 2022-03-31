@@ -21,4 +21,7 @@ urlpatterns = [
     path('<int:id>/update', UpdateBookView.as_view(), name='book_update'),
     path('<int:id>/delete', DeleteBookView.as_view(), name='book_delete'),
     path('import_book', ImportBookView.as_view(), name='book_import'),
+    
+    
+    path('<int:id>/exemplar', ListExemplareView.as_view(), name='exemplar_list'),
 ]

@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.views import View
-from .models import Contributor, Category, Book
+from .models import Contributor, Category, Book, Exemplar
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from .forms import *
 from tablib import Dataset
@@ -214,6 +214,10 @@ class UpdateBookView(View):
             try:
                 contributor = Contributor.objects.get(id=form.cleaned_data['contributor'])
                 book.contributor = contributor
+            except:
+                pass
+
+            try:
                 book.image = request.FILES['image']
             except:
                 pass
@@ -262,3 +266,32 @@ class ImportBookView(View):
 
         else:
             return HttpResponse(form.errors)
+
+
+class ListExemplareView(View):
+    template_name = 'book/exemplar_list.html'
+
+    def get(self, request, id):
+        this_book = Book.objects.get(id=id)
+        obj = Exemplar.objects.filter(book_id=id)
+        page = request.GET.get('page')
+        paginator = Paginator(obj, 5)
+        try:
+            exemplars = paginator.page(page)
+        except PageNotAnInteger:
+            exemplars = paginator.page(1)
+        except EmptyPage:
+            exemplars = paginator.page(paginator.num_pages)
+        try:
+            bs = obj[0].bookshelf
+        except:
+            bs= 'None'
+        return render(request, self.template_name,{
+            'this_book':this_book,
+            'exemplars':exemplars.object_list,
+            'exemplar':exemplars,
+            'range': paginator.page_range,
+            'page_now': exemplars.number,
+            'obj':obj,
+            'bs':bs
+        })
