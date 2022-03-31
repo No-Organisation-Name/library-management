@@ -27,4 +27,5 @@ urlpatterns = [
     path('<int:id>/exemplar/save', ListExemplareView.as_view(), name='exemplar_save'),
     path('<int:id>/exemplar/<int:exm>/edit', UpdateExemplarView.as_view(), name='exemplar_edit'),
     path('<int:id>/exemplar/<int:exm>/update', UpdateExemplarView.as_view(), name='exemplar_update'),
+    path('<int:id>/exemplar/<int:exm>/delete', DeleteExemplarView.as_view(), name='exemplar_delete'),
 ]

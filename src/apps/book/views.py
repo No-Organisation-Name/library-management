@@ -334,3 +334,10 @@ class UpdateExemplarView(View):
             exemplar.at_row = form.cleaned_data['at_row']
             exemplar.save()
         return redirect(reverse('exemplar_list', kwargs={'id': id}))
+
+
+class DeleteExemplarView(View):
+    def get(self, request, id, exm):
+        exemplar = Exemplar.objects.get(id=exm)
+        exemplar.delete()
+        return redirect(reverse('exemplar_list', kwargs={'id': id}))
