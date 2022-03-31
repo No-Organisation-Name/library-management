@@ -309,3 +309,28 @@ class ListExemplareView(View):
             exemplar.at_row = form.cleaned_data['at_row']
             exemplar.save()
         return redirect(reverse('exemplar_list', kwargs={'id': id}))
+
+class UpdateExemplarView(View):
+    template_name = 'book/exemplar_edit.html'
+
+    def get(self, request, id, exm):
+        exemplar = Exemplar.objects.get(id=exm)
+        form = AddStocksForm(initial={
+            'bookshelf': exemplar.bookshelf,
+            'barcode': exemplar.barcode,
+            'at_row': exemplar.at_row,
+        })
+        return render(request, self.template_name, {
+            'form': form,
+            'id': id,
+        })
+
+    def post(self, request, id, exm):
+        exemplar = Exemplar.objects.get(id=exm)
+        form = AddStocksForm(request.POST)
+        if form.is_valid():
+            exemplar.bookshelf = form.cleaned_data['bookshelf']
+            exemplar.barcode = form.cleaned_data['barcode']
+            exemplar.at_row = form.cleaned_data['at_row']
+            exemplar.save()
+        return redirect(reverse('exemplar_list', kwargs={'id': id}))
