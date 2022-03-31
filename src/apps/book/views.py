@@ -272,6 +272,7 @@ class ListExemplareView(View):
     template_name = 'book/exemplar_list.html'
 
     def get(self, request, id):
+        form = AddStocksForm()
         this_book = Book.objects.get(id=id)
         obj = Exemplar.objects.filter(book_id=id)
         page = request.GET.get('page')
@@ -293,5 +294,18 @@ class ListExemplareView(View):
             'range': paginator.page_range,
             'page_now': exemplars.number,
             'obj':obj,
-            'bs':bs
+            'bs':bs,
+            'form':form,
+            'id':id
         })
+
+    def post(self, request, id):
+        form = AddStocksForm(request.POST)
+        if form.is_valid():
+            exemplar = Exemplar()
+            exemplar.book = Book.objects.get(id=id)
+            exemplar.bookshelf = form.cleaned_data['bookshelf']
+            exemplar.barcode = form.cleaned_data['barcode']
+            exemplar.at_row = form.cleaned_data['at_row']
+            exemplar.save()
+        return redirect(reverse('exemplar_list', kwargs={'id': id}))

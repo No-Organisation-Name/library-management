@@ -1,6 +1,6 @@
 from cProfile import label
 from django import forms
-from .models import Contributor, Category
+from .models import Contributor, Category, BookShelf
 
 
 class AddContributorForm(forms.Form):
@@ -138,3 +138,20 @@ class BookFormEdit(forms.Form):
 
 class UploadExelForm(forms.Form):
     upload_file = forms.FileField(label='Upload File')
+
+
+class AddStocksForm(forms.Form):
+    barcode = forms.CharField(label='Barcode', max_length=50, widget=forms.TextInput(attrs={
+        'class': 'form-control',
+        'placeholder': 'Barcode'
+        }))
+    
+    bookshelf = forms.ModelChoiceField(label='Book Shelf', queryset=BookShelf.objects.all(), widget=forms.Select(attrs={
+        'class': 'form-control',
+        'placeholder': 'Category'
+    }))
+
+    at_row = forms.CharField(label='At Row', max_length=50, widget=forms.TextInput(attrs={
+        'class': 'form-control',
+        'placeholder': 'At Row'
+        }))

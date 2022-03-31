@@ -24,4 +24,5 @@ urlpatterns = [
     
     
     path('<int:id>/exemplar', ListExemplareView.as_view(), name='exemplar_list'),
+    path('<int:id>/exemplar/save', ListExemplareView.as_view(), name='exemplar_save'),
 ]
