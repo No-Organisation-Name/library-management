@@ -1,0 +1,106 @@
+{% extends "dashboard.html" %}
+{% block content %}
+<div class="container">
+    <form action="{% url 'member_update' id %}" method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        <h1 style="text-align: center;">Edit Membership</h1>
+        <div class="row">
+            <div class="col">
+              <div class="form-group">
+                <label for="">{{form.first_name.label}}</label>
+                {{form.first_name}}
+              </div>
+              <div class="form-group">
+                <label for="">{{form.last_name.label}}</label>
+                {{form.last_name}}
+              </div>
+              <div class="form-group">
+                <label for="">{{form.username.label}}</label>
+                {{form.username}}
+              </div>
+              <div class="form-group">
+                <label for="">{{form.password.label}}</label>
+                {{form.password}}
+              </div>
+              <div class="form-group">
+                <label for="">{{form.email.label}}</label>
+                {{form.email}}
+              </div>
+              <div class="form-group">
+                <label for="">{{form.nik.label}}</label>
+                {{form.nik}}
+              </div>
+              <div class="form-group">
+                <label for="">{{form.member_type.label}}</label>
+                {{form.member_type}}
+              </div>
+              <div class="form-group">
+                <label for="">{{form.place_of_birth.label}}</label>
+                {{form.place_of_birth}}
+              </div>
+              <div class="form-group">
+                <label>{{form.date_of_birth.label}}</label>
+                  <div class="input-group date" id="date_of_birth" data-target-input="nearest">
+                      {{form.date_of_birth}}
+                      <div class="input-group-append" data-target="#date_of_birth" data-toggle="datetimepicker">
+                          <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                      </div>
+                  </div>
+              </div>
+            </div>
+            <div class="col">
+              <div class="form-group">
+                <label for="">{{form.gender.label}}</label>
+                {{form.gender}}
+              </div>
+              <div class="form-group">
+                <label for="">{{form.faith.label}}</label>
+                {{form.faith}}
+              </div>
+              <div class="form-group">
+                <label for="">{{form.married.label}}</label>
+                {{form.married}}
+              </div>
+              <div class="form-group">
+                <label for="">{{form.job.label}}</label>
+                {{form.job}}
+              </div>
+              <div class="form-group">
+                <label for="">{{form.phone_number.label}}</label>
+                {{form.phone_number}}
+              </div>
+              <div class="form-group">
+                <label for="">{{form.address.label}}</label>
+                {{form.address}}
+              </div>
+              <div class="form-group">
+                <label for="">{{form.cost.label}}</label>
+                {{form.cost}}
+              </div>
+            </div>
+          </div>
+          <div class="form-group" style="margin-left: 87%;">
+            <a href="{% url 'member_list' %}" class="btn btn-default">Cancel</a>
+            <button type="submit" class="btn btn-primary">Save</button>
+          </div>
+    </form>
+</div>
+<script>
+    $(function () {
+      $('#date_of_birth').datetimepicker({
+          format: 'YYYY-MM-DD',
+      });
+  
+      $('#cost').maskMoney({
+          thousands: '.',
+          decimal: ',',
+          precision: 0
+      });
+
+      $('#nik').inputmask('9999 9999 9999 9999');
+      $("#phone_number").inputmask("9999 9999 9999");
+        
+      });
+  </script>
+  
+{% endblock content %}
