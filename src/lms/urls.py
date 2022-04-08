@@ -22,5 +22,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('book/', include('apps.book.urls')),
     path('membership/', include('apps.membership.urls')),
+    path('transaction/', include('apps.transaction.urls')),
 ]
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

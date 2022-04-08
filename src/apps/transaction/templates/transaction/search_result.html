@@ -1,0 +1,190 @@
+{% extends "dashboard.html" %}
+{% block content %}
+<section class="content">
+    <div class="container-fluid">
+        <h2 class="text-center display-4">Search User</h2>
+        <form action="{% url 'transaction_search_result' %}" method="POST">
+            {% csrf_token %}
+            <div class="row">
+                <div class="col-md-10 offset-md-1">
+                    <div class="row">
+                        <div class="col-2">
+                        </div>
+                        <div class="col-8">
+                            <div class="form-group">
+                                <div class="input-group input-group-lg" style="margin-top: 31px;">
+                                    {{form.any_data}}
+                                    <div class="input-group-append">
+                                        <button type="submit" class="btn btn-lg btn-default">
+                                            <i class="fa fa-search"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+        </form>
+    </div>
+    {% if member %}
+    
+    {% else %}
+    <div class="row" style="margin-left: 93%;
+    margin-bottom: 25px;">
+        <a href="" class ='btn btn-success' data-toggle="modal" data-target="#modal-lg" >New User</a>
+    </div>
+      
+    {% endif %}
+    <div class="container-fluid">
+        <table class="table table-striped">
+            <thead>
+                <th>Full Name</th>
+                <th>NIK</th>
+                <th>Email</th>
+                <th>Gender</th>
+                <th></th>
+            </thead>
+            <tbody>
+                {% if member %}
+                    <tr>
+                        <td>
+                            {{member.user.first_name}} {{member.user.last_name}}
+                        </td>
+                        <td>
+                            {{member.nik}}
+                        </td>
+                        <td>
+                            {{member.user.email}}
+                        </td>
+                        <td>
+                            {{member.gender}}
+                        </td>
+                        <td>
+                            <div class="form-group">
+                                <a href="" class="btn btn-primary">Details</a>
+                                <a href="{% url 'transaction_search' %}" class="btn btn-danger">
+                                    <i class="fas fa-times"></i>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="5">
+                            <div class="alert alert-danger" style="text-align: center;">
+                                <strong>No Data Found</strong>
+                            </div>
+                        </td>
+                    </tr>
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
+</section>
+<div class="modal fade" id="modal-lg">
+    <div class="modal-dialog modal-xl">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title" style="text-align:center;margin-left: 40%;">Add User</h4>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form action="" method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="row">
+              <div class="col">
+                <div class="form-group">
+                  <label for="">{{member_form.first_name.label}}</label>
+                  {{member_form.first_name}}
+                </div>
+                <div class="form-group">
+                  <label for="">{{member_form.last_name.label}}</label>
+                  {{member_form.last_name}}
+                </div>
+                <div class="form-group">
+                  <label for="">{{fomember_formrm.email.label}}</label>
+                  {{member_form.email}}
+                </div>
+                <div class="form-group">
+                  <label for="">{{member_form.nik.label}}</label>
+                  {{member_form.nik}}
+                </div>
+                <div class="form-group">
+                  <label for="">{{member_form.member_type.label}}</label>
+                  {{member_form.member_type}}
+                </div>
+                <div class="form-group">
+                  <label for="">{{member_form.place_of_birth.label}}</label>
+                  {{member_form.place_of_birth}}
+                </div>
+                <div class="form-group">
+                  <label>{{member_form.date_of_birth.label}}</label>
+                    <div class="input-group date" id="date_of_birth" data-target-input="nearest">
+                        {{member_form.date_of_birth}}
+                        <div class="input-group-append" data-target="#date_of_birth" data-toggle="datetimepicker">
+                            <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                        </div>
+                    </div>
+                </div>
+              </div>
+              <div class="col">
+                <div class="form-group">
+                  <label for="">{{member_form.gender.label}}</label>
+                  {{member_form.gender}}
+                </div>
+                <div class="form-group">
+                  <label for="">{{member_form.faith.label}}</label>
+                  {{member_form.faith}}
+                </div>
+                <div class="form-group">
+                  <label for="">{{member_form.married.label}}</label>
+                  {{member_form.married}}
+                </div>
+                <div class="form-group">
+                  <label for="">{{member_form.job.label}}</label>
+                  {{member_form.job}}
+                </div>
+                <div class="form-group">
+                  <label for="">{{member_form.phone_number.label}}</label>
+                  {{member_form.phone_number}}
+                </div>
+                <div class="form-group">
+                  <label for="">{{member_form.address.label}}</label>
+                  {{member_form.address}}
+                </div>
+                <div class="form-group">
+                  <label for="">{{member_form.cost.label}}</label>
+                  {{member_form.cost}}
+                </div>
+              </div>
+            </div>
+            <div class="form-group" style="margin-left: 87%;">
+              <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+              <button type="submit" class="btn btn-primary">Save</button>
+            </div>
+          </form>
+        </div>
+      </div>
+      <!-- /.modal-content -->
+    </div>
+    </div>
+<script>
+$(function () {
+    $('#date_of_birth').datetimepicker({
+        format: 'YYYY-MM-DD',
+    });
+
+    $("#cost").maskMoney({
+      thousands: ".",
+      decimal: ",",
+      precision: 0
+    });
+      
+});
+</script>
+  
+{% endblock content %}

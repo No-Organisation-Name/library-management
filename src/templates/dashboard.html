@@ -104,24 +104,33 @@
               </a>
             </li>
             <li class="nav-item">
-              <a href="{% url 'contributor_list' %}" class="nav-link">
-                <i class="nav-icon fas fa-chart-network"></i>
-                <p>Contributors</p>
-              </a>
-            </li>
-            <li class="nav-item">
-              <a href="{% url 'category_list' %}" class="nav-link">
-                <i class="nav-icon fad fa-ballot"></i>
-                <p>Categories</p>
-              </a>
-            </li>
-            <li class="nav-item">
-              <a href="{% url 'book_list' %}" class="nav-link">
+              <a href="" class="nav-link">
                 <i class="nav-icon fad fa-books"></i>
                 <p>
                   Books
+                  <i class="fas fa-angle-left right"></i>
                 </p>
               </a>
+              <ul class="nav nav-treeview">
+                <li class="nav-item">
+                  <a href="{% url 'contributor_list' %}" class="nav-link">
+                    <i class="nav-icon fas fa-chart-network"></i>
+                    <p>Contributors</p>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="{% url 'category_list' %}" class="nav-link">
+                    <i class="nav-icon fad fa-ballot"></i>
+                    <p>Categories</p>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="{% url 'book_list' %}" class="nav-link">
+                    <i class="nav-icon far fa-book"></i>
+                    <p>Book</p>
+                  </a>
+                </li>
+              </ul>
             </li>
             <li class="nav-item">
               <a href="#" class="nav-link">
@@ -141,7 +150,24 @@
                 <li class="nav-item">
                   <a href="{% url 'member_list' %}" class="nav-link">
                     <i class="nav-icon fad fa-users"></i>
-                    <p>Members</p>
+                    <p>User</p>
+                  </a>
+                </li>
+              </ul>
+            </li>
+            <li class="nav-item">
+              <a href="#" class="nav-link">
+                <i class="nav-icon far fa-laptop"></i>
+                <p>
+                  Loan Circulation
+                  <i class="fas fa-angle-left right"></i>
+                </p>
+              </a>
+              <ul class="nav nav-treeview">
+                <li class="nav-item">
+                  <a href="{% url 'transaction_search' %}" class="nav-link">
+                    <i class="nav-icon fas fa-books-medical"></i>
+                    <p>Transaction</p>
                   </a>
                 </li>
               </ul>

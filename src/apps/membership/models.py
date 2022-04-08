@@ -6,7 +6,7 @@ class Type(models.Model):
     span_of_time = models.IntegerField()
     fine = models.CharField(max_length=15)
     amount_of_book = models.IntegerField()
-    cost = models.CharField(max_length=15)
+    cost = models.FloatField(default=0)
     create_at = models.DateTimeField(auto_now_add=True)
     update_at = models.DateTimeField(auto_now=True)
 
@@ -29,7 +29,9 @@ class Membership(models.Model):
     married = models.BooleanField(default=False)
     job = models.CharField(max_length=45)
     phone_number = models.CharField(max_length=25)
-    cost = models.CharField(max_length=15)
+    cost = models.FloatField(default=0)
+    create_at = models.DateTimeField(auto_now_add=True)
+    update_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return self.user.username

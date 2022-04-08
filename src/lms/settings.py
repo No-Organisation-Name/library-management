@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'import_export',
     'apps.book',
     'apps.membership',
+    'apps.transaction',
 ]
 
 MIDDLEWARE = [

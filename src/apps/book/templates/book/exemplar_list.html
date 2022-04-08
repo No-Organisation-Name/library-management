@@ -9,12 +9,8 @@
         <div class="row">
             <a href="{% url 'book_list' %}" class="btn btn-danger cancel-purple"><i class="fas fa-window-close"></i></a>
             <table class="table table-striped">
+              <h1 style="text-align: center; margin-left: 16%;"> {{this_book.title}} </h1>
                 <tbody>
-                    <tr>
-                        <td>Titel</td>
-                        <td> : </td>
-                        <td>{{this_book.title}}</td>
-                    </tr>
                     <tr>
                         <td>Description</td>
                         <td> : </td>
@@ -66,6 +62,7 @@
     </div>
 </div>
 <div class="row" style="margin-top:35px">
+  <div class="col-1"></div>
     <div class="col">
         <a href="" data-toggle="modal" data-target="#modal-lg" class="btn btn-success" style="margin-left: 97%;
         margin-bottom: 25px;"><span><i class="fas fa-plus"></i></span></a>
