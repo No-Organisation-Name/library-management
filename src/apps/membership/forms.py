@@ -63,10 +63,6 @@ class AddMembershipForm(forms.Form):
     address = forms.CharField(label='Address', max_length=100, widget=forms.TextInput(attrs={
         'class': 'form-control',
         'placeholder':'Address',}))
-    cost = forms.CharField(label='Cost', max_length=12, widget=forms.TextInput(attrs={
-        'class': 'form-control',
-        'id': 'cost',
-        'placeholder':'Rp. 0',}), required=False)
 
 
 class EditMembershipForm(forms.Form):
@@ -122,8 +118,4 @@ class EditMembershipForm(forms.Form):
         'id':'phone_number'}))
     address = forms.CharField(label='Address', max_length=100, widget=forms.Textarea(attrs={
         'class': 'form-control',
-        'placeholder':'Address'}))
-    cost = forms.CharField(label='Cost', max_length=12, widget=forms.TextInput(attrs={
-        'class': 'form-control',
-        'id': 'cost',
-        'placeholder':'Rp. 0'}))
+        'placeholder':'Address'}))  

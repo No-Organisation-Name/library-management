@@ -134,10 +134,7 @@ class ListMemberView(View):
             membership.married = form.cleaned_data['married']
             membership.job = form.cleaned_data['job']
             membership.phone_number = form.cleaned_data['phone_number']
-            if form.cleaned_data['cost'] == '':
-                membership.cost = 0
-            else:
-                membership.cost = form.cleaned_data['cost']
+            membership.fine = Type.objects.get(id=form.cleaned_data['member_type']).fine
             membership.save()
             return redirect(reverse('member_list'))
         else:
@@ -164,10 +161,9 @@ class UpdateMemberView(View):
             'job':member.job,
             'address':member.address,
             'phone_number':member.phone_number,
-            'cost':member.cost,
         }
         form = EditMembershipForm(initial=data)
-        print(data)
+        print(data['member_type'].fine)
         return render(request, self.template_name,{
             'form':form,
             'id':id
@@ -194,7 +190,7 @@ class UpdateMemberView(View):
             member.job = form.cleaned_data['job']
             member.address = form.cleaned_data['address']
             member.phone_number = form.cleaned_data['phone_number'].replace('_','').replace(' ','')
-            member.cost = form.cleaned_data['cost'].replace('.','')
+            member.fine = Type.objects.get(name=form.cleaned_data['member_type']).fine
             member.save()
         else:
             return HttpResponse(form.errors)

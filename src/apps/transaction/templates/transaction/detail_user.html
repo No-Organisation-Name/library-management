@@ -94,6 +94,11 @@
         <div class="card-body">
           <div class="tab-content" id="custom-tabs-four-tabContent">
             <div class="tab-pane fade show active" id="custom-tabs-four-home" role="tabpanel" aria-labelledby="custom-tabs-four-home-tab">
+              {% if add %}
+                <a href="" class="btn btn-primary" style="margin-bottom: 25px;margin-left: 98%;">
+                  <i class="fas fa-plus"></i>
+                </a>
+              {% endif %}
                <table class="table">
                 <thead>
                   <th>Barcode</th>
@@ -124,10 +129,77 @@
                </table>
             </div>
             <div class="tab-pane fade" id="custom-tabs-four-profile" role="tabpanel" aria-labelledby="custom-tabs-four-profile-tab">
-               Mauris tincidunt mi at erat gravida, eget tristique urna bibendum. Mauris pharetra purus ut ligula tempor, et vulputate metus facilisis. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Maecenas sollicitudin, nisi a luctus interdum, nisl ligula placerat mi, quis posuere purus ligula eu lectus. Donec nunc tellus, elementum sit amet ultricies at, posuere nec nunc. Nunc euismod pellentesque diam.
+               <table class="table table-striped">
+                 <thead>
+                  <th>Barcode</th>
+                  <th>Book Title</th>
+                  <th>Loan Date</th>
+                  <th>Due Date</th>
+                  <th>Fine</th>
+                 </thead>
+                 <tbody>
+                  {% if loan_fine %}
+                  {% for l in loan_fine %}
+                  <tr>
+                    <td>{{l.exemplar.barcode}}</td>
+                    <td>{{l.exemplar.book}}</td>
+                    <td>{{l.date_out}}</td>
+                    <td>{{l.date_return}}</td>
+                    <td>{{l.fine}}</td>
+                  </tr>
+                    
+                  {% endfor %}
+                  <tr>
+                    <td colspan="4" style="text-align: center;
+                    background: darkslategray;
+                    color: aliceblue;">
+                      <b>Fine Total</b>
+                    </td>
+                    <td style="
+                    background: darkslategray;
+                    color: aliceblue;">
+                      <b>{{total_fine}}</b>
+                    </td>
+                  </tr>
+              {% else %}
+                <tr>
+                  <td colspan="6" style="text-align:center">No Fine</td>
+                </tr>
+              {% endif %}
+
+                 </tbody>
+               </table>
+               <a href="" class="btn btn-info" style="margin-left: 96%;">Paid</a>
             </div>
             <div class="tab-pane fade" id="custom-tabs-four-messages" role="tabpanel" aria-labelledby="custom-tabs-four-messages-tab">
-               Morbi turpis dolor, vulputate vitae felis non, tincidunt congue mauris. Phasellus volutpat augue id mi placerat mollis. Vivamus faucibus eu massa eget condimentum. Fusce nec hendrerit sem, ac tristique nulla. Integer vestibulum orci odio. Cras nec augue ipsum. Suspendisse ut velit condimentum, mattis urna a, malesuada nunc. Curabitur eleifend facilisis velit finibus tristique. Nam vulputate, eros non luctus efficitur, ipsum odio volutpat massa, sit amet sollicitudin est libero sed ipsum. Nulla lacinia, ex vitae gravida fermentum, lectus ipsum gravida arcu, id fermentum metus arcu vel metus. Curabitur eget sem eu risus tincidunt eleifend ac ornare magna.
+              <table class="table">
+                <thead>
+                  <th>Barcode</th>
+                  <th>Book Title</th>
+                  <th>Loan Date</th>
+                  <th>Due Date</th>
+                  <th></th>
+                </thead>
+                <tbody>
+                  {% if loan_history %}
+                    {% for l in loan_history %}
+                    <tr>
+                      <td>{{l.exemplar.barcode}}</td>
+                      <td>{{l.exemplar.book}}</td>
+                      <td>{{l.date_out}}</td>
+                      <td>{{l.date_return}}</td>
+                      <td></td>
+                    </tr>
+                      
+                    {% endfor %}
+                {% else %}
+                  <tr>
+                    <td colspan="5" style="text-align:center">No Loan History</td>
+                  </tr>
+                {% endif %}
+                </tbody>
+                  
+               </table>
             </div>
           </div>
         </div>

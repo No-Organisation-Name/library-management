@@ -8,6 +8,8 @@ class Transaction(models.Model):
     exemplar = models.ForeignKey(Exemplar, related_name='transactions', on_delete=models.CASCADE)
     date_out = models.DateTimeField()
     date_return = models.DateTimeField()
+    fine = models.IntegerField(default=0, blank=True, null=True)
+    status = models.BooleanField(default=True, blank=True, null=True)
 
     def __str__(self):
         return self.exemplar.book.title

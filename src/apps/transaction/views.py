@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.views import View
 from .forms import *
+from apps.transaction.models import Transaction
 from apps.membership.forms import *
 from apps.membership.models import *
 from django.http import HttpResponse
@@ -69,10 +70,7 @@ class CreateUserView(View):
             membership.married = form.cleaned_data['married']
             membership.job = form.cleaned_data['job']
             membership.phone_number = form.cleaned_data['phone_number']
-            if form.cleaned_data['cost'] == '':
-                membership.cost = 0
-            else:
-                membership.cost = form.cleaned_data['cost'].replace('.','')
+            membership.fine = Type.objects.get(name=form.cleaned_data['member_type']).fine
             membership.save()
             return redirect(reverse('transaction_search'))
         else:
@@ -85,7 +83,22 @@ class DetailUserView(View):
     def get(self, request,id):
         member = Membership.objects.get(id=id)
         loan_transactions = member.transactions.all()
+        print(f"loan transactions: {loan_transactions.filter(status=True)}")
+        print(f"loan fine: {loan_transactions.filter(status=True).filter(fine__gt=0)}")
+        print(f"loan history: {loan_transactions.filter(status=False)}")
+        fines = [t.fine for t in loan_transactions]
+        total_fine = sum(fines)
+        if loan_transactions.count() < member.member_type.amount_of_book and total_fine == 0:
+            add_transaction = True
+        else:
+            add_transaction = False
+        print(add_transaction)
+        print(total_fine)
         return render(request, self.template_name,{
             'member': member,
-            'loan_transactions': loan_transactions
+            'loan_transactions': loan_transactions.filter(status=True),
+            'loan_history': loan_transactions.filter(status=False),
+            'loan_fine': loan_transactions.filter(status=True).filter(fine__gt=0),
+            'add':add_transaction,
+            'total_fine':total_fine,
         })
