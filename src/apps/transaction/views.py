@@ -61,11 +61,11 @@ class AdminBookResultView(View):
         form = SearchBookForm(request.POST)
         if form.is_valid():
             try:
-                book = Exemplar.objects.get(barcode=form.cleaned_data['any_data'],status=True)
-                form= SearchForm()
+                book = Exemplar.objects.get(barcode=str(form.cleaned_data['any_data']), status=True)
+                form= SearchBookForm()
             except:
                 book = None
-                form= SearchForm()
+                form= SearchBookForm()
             return render(request, self.template_name,{
                 'form': form,
                 'book': book,
@@ -116,21 +116,24 @@ class DetailUserView(View):
     def get(self, request,id):
         member = Membership.objects.get(id=id)
         loan_transactions = member.transactions.all()
-        print(f"loan transactions: {loan_transactions.filter(status=True)}")
-        print(f"loan fine: {loan_transactions.filter(status=True).filter(fine__gt=0)}")
-        print(f"loan history: {loan_transactions.filter(status=False)}")
-        fines = [t.fine for t in loan_transactions]
+        fines = [t.fine for t in loan_transactions.filter(status=True)]
         total_fine = sum(fines)
-        if loan_transactions.count() < member.member_type.amount_of_book and total_fine == 0:
+        if loan_transactions.filter(status=True).count() < member.member_type.amount_of_book and total_fine == 0:
             add_transaction = True
         else:
             add_transaction = False
+
+        if loan_transactions.filter(status=True) and total_fine == 0:
+            return_button = True
+        else:
+            return_button = False
         return render(request, self.template_name,{
             'member': member,
             'loan_transactions': loan_transactions.filter(status=True),
             'loan_history': loan_transactions.filter(status=False),
             'loan_fine': loan_transactions.filter(status=True).filter(fine__gt=0),
             'add':add_transaction,
+            'return_button':return_button,
             'total_fine':total_fine,
             'id':id
         })
@@ -151,3 +154,19 @@ class AdminCheckoutBookView(View):
         new_transaction.date_return = now + timedelta(days=member.member_type.span_of_time)
         new_transaction.save()
         return redirect(reverse('transaction_detail_user', args=[f'{id}']))
+
+
+class ReturnTransactionView(View):
+
+    def get(self, request, id):
+        member = Membership.objects.get(id=id)
+        member_trans = member.transactions.filter(status=True)
+        exemplars = Exemplar.objects.filter(transactions__user=member)
+        for mt in member_trans:
+            mt.status = False
+            mt.save()
+        for e in exemplars:
+            e.status = True
+            e.save()
+
+        return redirect(reverse('transaction_detail_user', args=[f"{id}"]))
