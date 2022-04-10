@@ -4,10 +4,13 @@ from .forms import *
 from apps.transaction.models import Transaction
 from apps.membership.forms import *
 from apps.membership.models import *
+from apps.book.models import Exemplar
 from django.http import HttpResponse
 from django.urls import reverse
 import random
 import string
+import datetime
+from datetime import timedelta
 
 class SearchView(View):
     template_name = 'transaction/search.html'
@@ -18,6 +21,16 @@ class SearchView(View):
             'form': form,
         })
 
+
+class AdminSearchingBookView(View):
+    template_name = 'transaction/search_book.html'
+
+    def get(self, request, id):
+        form = SearchBookForm(request.POST)
+        return render(request, self.template_name,{
+            'form': form,
+            'id':id,
+        })
 
 
 class SearchUserView(View):
@@ -37,6 +50,26 @@ class SearchUserView(View):
                 'form': form,
                 'member': member,
                 'member_form': member_form,
+            })
+        return HttpResponse(form.errors)
+
+
+class AdminBookResultView(View):
+    template_name='transaction/search_book_result.html'
+
+    def post(self,request,id):
+        form = SearchBookForm(request.POST)
+        if form.is_valid():
+            try:
+                book = Exemplar.objects.get(barcode=form.cleaned_data['any_data'],status=True)
+                form= SearchForm()
+            except:
+                book = None
+                form= SearchForm()
+            return render(request, self.template_name,{
+                'form': form,
+                'book': book,
+                'id':id,
             })
         return HttpResponse(form.errors)
 
@@ -92,8 +125,6 @@ class DetailUserView(View):
             add_transaction = True
         else:
             add_transaction = False
-        print(add_transaction)
-        print(total_fine)
         return render(request, self.template_name,{
             'member': member,
             'loan_transactions': loan_transactions.filter(status=True),
@@ -101,4 +132,22 @@ class DetailUserView(View):
             'loan_fine': loan_transactions.filter(status=True).filter(fine__gt=0),
             'add':add_transaction,
             'total_fine':total_fine,
+            'id':id
         })
+
+
+class AdminCheckoutBookView(View):
+
+    def get(self,request, id, bcr):
+        exmpl = Exemplar.objects.get(barcode=bcr)
+        exmpl.status = False
+        exmpl.save()
+        member = Membership.objects.get(id=id)
+        now = datetime.datetime.now()
+        new_transaction = Transaction()
+        new_transaction.user = member
+        new_transaction.exemplar = Exemplar.objects.get(barcode=bcr)
+        new_transaction.date_out = now
+        new_transaction.date_return = now + timedelta(days=member.member_type.span_of_time)
+        new_transaction.save()
+        return redirect(reverse('transaction_detail_user', args=[f'{id}']))
