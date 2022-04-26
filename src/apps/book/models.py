@@ -70,7 +70,7 @@ class Exemplar(models.Model):
     update_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return self.book.title
+        return self.barcode
 
     class Meta:
         db_table = 'exemplar'

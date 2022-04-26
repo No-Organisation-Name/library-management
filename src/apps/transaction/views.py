@@ -114,45 +114,80 @@ class DetailUserView(View):
     template_name = 'transaction/detail_user.html'
 
     def get(self, request,id):
-        member = Membership.objects.get(id=id)
-        loan_transactions = member.transactions.all()
-        fines = [t.fine for t in loan_transactions.filter(status=True)]
-        total_fine = sum(fines)
-        if loan_transactions.filter(status=True).count() < member.member_type.amount_of_book and total_fine == 0:
+        try:
+            member = Membership.objects.get(id=id)
+            loan_transactions = member.transactions.filter(status=True)[0]
+            total_fine = loan_transactions.fine
+            total_exemplar = loan_transactions.borrows.all().count()
+        except:
+            loan_transactions = False
+            total_fine = 0
+            total_exemplar = 0
+
+        print(total_fine)
+        print(total_exemplar)
+        if  total_exemplar < member.member_type.amount_of_book and total_fine == 0 :
             add_transaction = True
         else:
             add_transaction = False
 
-        if loan_transactions.filter(status=True) and total_fine == 0:
+        if loan_transactions and  total_fine == 0 and total_exemplar > 0:
             return_button = True
         else:
             return_button = False
         return render(request, self.template_name,{
             'member': member,
-            'loan_transactions': loan_transactions.filter(status=True),
-            'loan_history': loan_transactions.filter(status=False),
-            'loan_fine': loan_transactions.filter(status=True).filter(fine__gt=0),
+            'loan_transactions': member.transactions.filter(status=True),
+            'loan_history': member.transactions.filter(status=False),
+            'loan_fine': member.transactions.filter(status=True).filter(fine__gt=0),
             'add':add_transaction,
             'return_button':return_button,
             'total_fine':total_fine,
-            'id':id
+            'id':id,
+            'total_exemplar':total_exemplar
+        })
+
+    
+class AddTransactionView(View):
+
+    def get(self, request, id):
+        member = Membership.objects.get(id=id)
+        transaction = Transaction()
+        transaction.user = member
+        transaction.date_out = datetime.datetime.now()
+        transaction.date_return = datetime.datetime.now() + timedelta(days=member.member_type.span_of_time)
+        transaction.fine = 0
+        transaction.save()
+        return redirect('transaction_detail_user',id=id)
+
+class DetailTransactionView(View):
+    
+    template_name = 'transaction/detail_transaction.html'
+
+    def get(self, request,id):
+        exemplar = Membership.objects.get(id=id).transactions.filter(status=True)[0].borrows.all()
+        if exemplar.count() < Membership.objects.get(id=id).member_type.amount_of_book:
+            add_exemplar = True
+        else:
+            add_exemplar = False
+        return render(request, self.template_name,{
+            'id':id,
+            'exemplar':exemplar,
+            'add_exemplar':add_exemplar,
         })
 
 
+from apps.transaction.models import Borrow
 class AdminCheckoutBookView(View):
 
     def get(self,request, id, bcr):
-        exmpl = Exemplar.objects.get(barcode=bcr)
-        exmpl.status = False
-        exmpl.save()
-        member = Membership.objects.get(id=id)
-        now = datetime.datetime.now()
-        new_transaction = Transaction()
-        new_transaction.user = member
-        new_transaction.exemplar = Exemplar.objects.get(barcode=bcr)
-        new_transaction.date_out = now
-        new_transaction.date_return = now + timedelta(days=member.member_type.span_of_time)
-        new_transaction.save()
+        transaction_id = Membership.objects.get(id=id).transactions.filter(status=True)[0]
+        new_exemplar = Borrow()
+        new_exemplar.transaction = transaction_id
+        new_exemplar.exemplar = Exemplar.objects.get(barcode=bcr)
+        new_exemplar.exemplar.status = False
+        new_exemplar.exemplar.save()
+        new_exemplar.save()
         return redirect(reverse('transaction_detail_user', args=[f'{id}']))
 
 
@@ -160,13 +195,12 @@ class ReturnTransactionView(View):
 
     def get(self, request, id):
         member = Membership.objects.get(id=id)
-        member_trans = member.transactions.filter(status=True)
-        exemplars = Exemplar.objects.filter(transactions__user=member)
-        for mt in member_trans:
-            mt.status = False
-            mt.save()
+        member_trans = member.transactions.get(status=True)
+        exemplars = member_trans.borrows.all()
+        member_trans.status = False
+        member_trans.save()
         for e in exemplars:
-            e.status = True
-            e.save()
+            e.exemplar.status = True
+            e.exemplar.save()
 
         return redirect(reverse('transaction_detail_user', args=[f"{id}"]))
