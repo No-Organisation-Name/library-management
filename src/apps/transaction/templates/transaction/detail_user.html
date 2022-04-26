@@ -1,0 +1,222 @@
+{% extends "dashboard.html" %}
+{% block content %}
+  <div class="container-fluid">
+      <div class="card">
+        <div class="row">
+            <div class="col-3">
+              <img class="rounded-corners-gradient-borders" src="https://picsum.photos/200" alt="">
+            </div>
+            <div class="col" style="margin-bottom: 19px;">
+                <h1 style="text-align: center;"> {{member.user.first_name}} {{member.user.last_name}} </h1>
+              <div class="row">
+                  <div class="col">
+                    <table class="table table-striped">                        
+                        <tbody>
+                            <tr>
+                                <td>Member Type</td>
+                                <td> : </td>
+                                <td>{{member.member_type}}</td>
+                            </tr>
+                            <tr>
+                                <td>NIK</td>
+                                <td> : </td>
+                                <td>{{member.nik}}</td>
+                            </tr>
+                            <tr>
+                                <td>Gender</td>
+                                <td> : </td>
+                                <td>{{member.gender}}</td>
+                            </tr>
+                            <tr>
+                                <td>Email</td>
+                                <td> : </td>
+                                <td>{{member.user.email}}</td>
+                            </tr>
+                            <tr>
+                                <td>Phone Number</td>
+                                <td> : </td>
+                                <td>{{member.phone_number}}</td>
+                            </tr>
+                        </tbody>
+                      </table>
+                  </div>
+                  <div class="col">
+                    <table class="table table-striped">
+                        <tbody>
+                            <tr>
+                                <td>Place Of Birth</td>
+                                <td> : </td>
+                                <td>{{member.place_of_birth}}</td>
+                            </tr>
+                            <tr>
+                                <td>Faith</td>
+                                <td> : </td>
+                                <td>{{member.faith}}</td>
+                            </tr>
+                            <tr>
+                                <td>Address</td>
+                                <td> : </td>
+                                <td>{{member.address}}</td>
+                            </tr>
+                            <tr>
+                                <td>Job</td>
+                                <td> : </td>
+                                <td>{{member.job}}</td>
+                            </tr>
+                            <tr>
+                                <td>Join at</td>
+                                <td> : </td>
+                                <td>{{member.create_at}}</td>
+                            </tr>
+                        </tbody>
+                      </table>
+                  </div>
+              </div>
+            </div>
+        </div>
+      </div>
+  </div>
+  <div class="container-fluid">
+    <div class="card card-primary card-outline card-outline-tabs">
+        <div class="card-header p-0 border-bottom-0">
+          <ul class="nav nav-tabs" id="custom-tabs-four-tab" role="tablist">
+            <li class="nav-item">
+              <a class="nav-link active" id="custom-tabs-four-home-tab" data-toggle="pill" href="#custom-tabs-four-home" role="tab" aria-controls="custom-tabs-four-home" aria-selected="true">TRANSACTIONS</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" id="custom-tabs-four-profile-tab" data-toggle="pill" href="#custom-tabs-four-profile" role="tab" aria-controls="custom-tabs-four-profile" aria-selected="false">FINES</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" id="custom-tabs-four-messages-tab" data-toggle="pill" href="#custom-tabs-four-messages" role="tab" aria-controls="custom-tabs-four-messages" aria-selected="false">HISTORY</a>
+            </li>
+          </ul>
+        </div>
+        <div class="card-body ">
+          <div class="tab-content" id="custom-tabs-four-tabContent">
+            <div class="tab-pane fade show active" id="custom-tabs-four-home" role="tabpanel" aria-labelledby="custom-tabs-four-home-tab">
+              {% if add %}
+              <a href="{% url 'add_transaction' id %}" class="btn btn-primary" style="margin-left: 90%; margin-bottom: 15px;">Add Transaction</a>
+                
+              {% endif %}
+               <table class="table">
+                <thead>
+                  <th>NO</th>
+                  <th>LOAN DATE</th>
+                  <th>DUE DATE</th>
+                  <th>FINES</th>
+                  <th>QUANTITY</th>
+                  <th></th>
+                </thead>
+                <tbody>
+                  {% if loan_transactions %}
+                    {% for l in loan_transactions %}
+                    <tr>
+                      <td>{{forloop.counter}}</td>
+                      <td>{{l.date_out}}</td>
+                      <td>{{l.date_return}}</td>
+                      <td>{{l.fine}}</td>
+                      <td>{{total_exemplar}}</td>
+                      <td>
+                        {% if return_button %}
+                        <a href="{% url 'return_transaction' id %}" class="btn btn-primary">Return</a>
+                        {% endif %}
+                        <a href="{% url 'detail_transactions' id %}" class="btn btn-success">Detail</a>
+                      </td>
+                    </tr>
+                      
+                    {% endfor %}
+                {% else %}
+                  <tr>
+                    <td colspan="5" style="text-align:center">No Loan Transaction</td>
+                  </tr>
+                {% endif %}
+                </tbody>
+               </table>
+               <div class="form-group">
+                
+              </div>
+            </div>
+            <div class="tab-pane fade" id="custom-tabs-four-profile" role="tabpanel" aria-labelledby="custom-tabs-four-profile-tab">
+               <table class="table table-striped">
+                 <thead>
+                  <th>NO</th>
+                  <th>LOAN DATE</th>
+                  <th>DUE DATE</th>
+                  <th>FINES</th>
+                 </thead>
+                 <tbody>
+                  {% if loan_fine %}
+                  {% for l in loan_fine %}
+                  <tr>
+                    <td>{{forloop.counter}}</td>
+                    <td>{{l.date_out}}</td>
+                    <td>{{l.date_return}}</td>
+                    <td>{{l.fine}}</td>
+                  </tr>
+                  {% endfor %}
+                  <tr>
+                    <td colspan="3" style="text-align: center;
+                    background: darkslategray;
+                    color: aliceblue;">
+                      <b>Fine Total</b>
+                    </td>
+                    <td style="
+                    background: darkslategray;
+                    color: aliceblue;">
+                      <b>{{total_fine}}</b>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td colspan="4">
+                      <div class="form-group">
+                        {% if loan_fine %}
+                        <a href="{% url 'return_transaction' id %}" class="btn btn-info" style="margin-left: 88%;">Paid</a>
+                   
+                        {% endif %}
+                       </div>
+                    </td>
+                  </tr>
+              {% else %}
+                <tr>
+                  <td colspan="6" style="text-align:center">No Fine</td>
+                </tr>
+              {% endif %}
+                 </tbody>
+               </table>
+               
+            </div>
+            <div class="tab-pane fade" id="custom-tabs-four-messages" role="tabpanel" aria-labelledby="custom-tabs-four-messages-tab">
+              <table class="table">
+                <thead>
+                  <th>Loan Date</th>
+                  <th>Due Date</th>
+                  <th>Return at</th>
+                  <th></th>
+                </thead>
+                <tbody>
+                  {% if loan_history %}
+                    {% for l in loan_history %}
+                    <tr>
+                      <td>{{l.date_out}}</td>
+                      <td>{{l.date_return}}</td>
+                      <td>{{l.update_at}}</td>
+                      <td></td>
+                    </tr>
+                      
+                    {% endfor %}
+                {% else %}
+                  <tr>
+                    <td colspan="5" style="text-align:center">No Loan History</td>
+                  </tr>
+                {% endif %}
+                </tbody>
+                  
+               </table>
+            </div>
+          </div>
+        </div>
+        <!-- /.card -->
+      </div>
+  </div>
+  
+{% endblock content %}
