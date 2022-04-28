@@ -42,6 +42,8 @@ INSTALLED_APPS = [
     'apps.book',
     'apps.membership',
     'apps.transaction',
+    "django_apscheduler",
+    "apps.my_scheduler",
 ]
 
 MIDDLEWARE = [
@@ -69,6 +71,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                "django.template.context_processors.request"
             ],
         },
     },
@@ -134,4 +137,14 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'),
 ]
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-IMPORT_EXPORT_USE_TRANSACTIONS = True
+
+APSCHEDULER_DATETIME_FORMAT =  "N j, Y, f:s a"  # Default
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'kiecodene@gmail.com'
+EMAIL_HOST_PASSWORD = 'ampbwivnkqyebylv'
+
+RECIPIENT_ADDRESS = 'zizugaming13@gmail.com '

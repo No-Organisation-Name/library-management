@@ -10,5 +10,5 @@ urlpatterns = [
     path('<int:id>/user/search/book', AdminSearchingBookView.as_view(), name='admin_searching_book'),
     path('<int:id>/user/book/result', AdminBookResultView.as_view(), name='admin_searching_book_result'),
     path('<int:id>/user/<str:bcr>/book/checkout', AdminCheckoutBookView.as_view(), name='book_checkout'),
-    path('<int:id>/user/return', ReturnTransactionView.as_view(), name='return_transaction'),
+    path('<int:id>/user/<int:id_transaction>/return', ReturnTransactionView.as_view(), name='return_transaction'),
 ]

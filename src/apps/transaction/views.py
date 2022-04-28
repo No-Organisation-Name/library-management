@@ -195,12 +195,11 @@ class AdminCheckoutBookView(View):
 
 class ReturnTransactionView(View):
 
-    def get(self, request, id):
-        member = Membership.objects.get(id=id)
-        member_trans = member.transactions.get(status=True)
-        exemplars = member_trans.borrows.all()
-        member_trans.status = False
-        member_trans.save()
+    def get(self, request, id, id_transaction):
+        transaction = Transaction.objects.get(id=id_transaction)
+        exemplars = transaction.borrows.all()
+        transaction.status = False
+        transaction.save()
         for e in exemplars:
             e.exemplar.status = True
             e.exemplar.save()
