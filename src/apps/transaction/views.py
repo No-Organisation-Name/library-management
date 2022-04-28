@@ -10,7 +10,7 @@ from django.urls import reverse
 import random
 import string
 import datetime
-from datetime import timedelta
+from datetime import timedelta, date
 
 class SearchView(View):
     template_name = 'transaction/search.html'
@@ -152,10 +152,12 @@ class AddTransactionView(View):
 
     def get(self, request, id):
         member = Membership.objects.get(id=id)
+        tomorrow = date.today() + timedelta(days=member.member_type.span_of_time)
+        midnight = datetime.datetime.combine(tomorrow, datetime.datetime.min.time())
         transaction = Transaction()
         transaction.user = member
         transaction.date_out = datetime.datetime.now()
-        transaction.date_return = datetime.datetime.now() + timedelta(days=member.member_type.span_of_time)
+        transaction.date_return = midnight
         transaction.fine = 0
         transaction.save()
         return redirect('transaction_detail_user',id=id)
