@@ -6,10 +6,10 @@ from django.template.loader import render_to_string
 from django.utils.html import strip_tags
 from lms import settings
 
-def send_due_date_mail(x):
+def send_due_date_mail(transaction):
     content = {
-        'full_name': x.user.user.first_name + ' ' + x.user.user.last_name,
-        'list_book': x.borrows.all(),
+        'full_name': transaction.user.user.first_name + ' ' + transaction.user.user.last_name,
+        'list_book': transaction.borrows.all(),
     }
     html_content = render_to_string('due_date_notification.html', content)
     text_content = strip_tags(html_content)
@@ -17,7 +17,26 @@ def send_due_date_mail(x):
         "Waktu peminjaman hampir habis",
         text_content,
         settings.EMAIL_HOST_USER,
-        [x.user.user.email]
+        [transaction.user.user.email]
     )
     email.attach_alternative(html_content, "text/html")
     email.send()
+
+def send_fine_notification_mail(transaction):
+    content = {
+        'full_name':transaction.user.user.first_name + ' ' + transaction.user.user.last_name,
+        'fine':transaction.fine,
+        'list_book':transaction.borrows.all(),
+
+    }
+    html_content = render_to_string('fine_notification.html', content)
+    text_content = strip_tags(html_content)
+    email = EmailMultiAlternatives(
+        "Peringatan denda",
+        text_content,
+        settings.EMAIL_HOST_USER,
+        [transaction.user.user.email]
+    )
+    email.attach_alternative(html_content, "text/html")
+    email.send()
+    
