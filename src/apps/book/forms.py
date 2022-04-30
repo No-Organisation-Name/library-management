@@ -171,3 +171,19 @@ class AddComeOutBookForm(forms.Form):
         'class': 'form-control',
         'placeholder': 'Description'
     }))
+
+
+class EditComeOutBookForm(forms.Form):
+    id = forms.HiddenInput()
+    exemplar = forms.ModelChoiceField(label='Exemplar',queryset=Exemplar.objects.all(), widget=forms.Select(attrs={
+        'class': 'form-control'}))
+    date_of_came_out = forms.CharField(label='Date of Come Out', max_length=50, widget=forms.TextInput(attrs={
+        'class': 'form-control datetimepicker-input',
+        'data-target': '#date_of_came_out',
+        'placeholder': 'Date of Come Out',
+        'id': 'date_of_came_out'
+    }))
+    description = forms.CharField(label='Description', max_length=50, widget=forms.Textarea(attrs={
+        'class': 'form-control',
+        'placeholder': 'Description'
+    }))

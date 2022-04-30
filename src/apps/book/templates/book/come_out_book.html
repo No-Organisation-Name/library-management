@@ -31,7 +31,7 @@
                                 {{o.date_of_came_out}}
                             </td>
                             <td>
-                                <a href="" class="btn btn-primary">Edit</a>
+                                <a href="{% url 'come_out_edit' o.id %}" class="btn btn-primary">Edit</a>
                                 <a href="{% url 'come_out_delete' o.id %}" class="btn btn-danger">Delete</a>
                             </td>
                         </tr>
