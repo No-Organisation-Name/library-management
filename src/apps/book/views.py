@@ -8,6 +8,7 @@ from tablib import Dataset
 from django.http import HttpResponse
 import datetime
 import mysql.connector as msql
+from apps.book.models import ComeOutBook
 
 class ContributorListView(View):
     template_name = 'contributor/contributor_list.html'
@@ -341,3 +342,15 @@ class DeleteExemplarView(View):
         exemplar = Exemplar.objects.get(id=exm)
         exemplar.delete()
         return redirect(reverse('exemplar_list', kwargs={'id': id}))
+
+
+class ListBookComeOut(View):
+    
+    template_name = 'book/come_out_book.html'
+    
+    def get(self, request):
+        obj = ComeOutBook.objects.all()
+        print(obj)
+        return render(request, self.template_name,{
+            'obj':obj
+        })

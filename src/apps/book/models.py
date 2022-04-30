@@ -74,3 +74,17 @@ class Exemplar(models.Model):
 
     class Meta:
         db_table = 'exemplar'
+
+
+class ComeOutBook(models.Model):
+    exemplar = models.ForeignKey(Exemplar, on_delete=models.CASCADE, related_name='came_out_books')
+    date_of_came_out = models.DateTimeField()
+    description = models.TextField(blank=True)
+    create_at = models.DateTimeField(auto_now_add=True)
+    update_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.exemplar.barcode
+
+    class Meta:
+        db_table = 'come_out_book'
