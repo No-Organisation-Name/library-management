@@ -379,3 +379,14 @@ class AddBookCameOutView(View):
             return redirect(reverse('come_out_list'))
         else:
             return HttpResponse(form.errors)
+
+
+
+class DeleteComeOutBookView(View):
+
+    def get(self, request, id):
+        obj = ComeOutBook.objects.get(id=id)
+        obj.exemplar.status=True
+        obj.exemplar.save()
+        obj.delete()
+        return redirect(reverse('come_out_list'))
