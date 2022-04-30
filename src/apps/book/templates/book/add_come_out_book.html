@@ -1,0 +1,55 @@
+{% extends "dashboard.html" %}
+{% block content %}
+
+<div class="container">
+    <div class="row">
+        <div class="col"></div>
+        <div class="col">
+            <h1>Add Date of Come Out</h1>
+            <form action="" method="POST">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="">
+                        {{form.exemplar.label}}
+                    </label>
+                    {{form.exemplar}}
+                </div>
+                <div class="form-group">
+                    <label for="">
+                        {{form.description.label}}
+                    </label>
+                    {{form.description}}
+                </div>
+                <div class="form-group">
+                    <label>{{form.date_of_came_out.label}}</label>
+                    <div class="input-group date" id="date_of_came_out" data-target-input="nearest">
+                        {{form.date_of_came_out}}
+                        <div class="input-group-append" data-target="#date_of_came_out" data-toggle="datetimepicker">
+                            <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer justify-content-right">
+                    <a href="{% url 'come_out_list' %}" class="btn btn-default" >Cancel</a>
+                    <button type="submit" class="btn btn-primary">Save</button>
+                </div>
+            </form>
+        </div>
+        <div class="col"></div>
+    </div>
+</div>
+
+<script>
+    $(function () {
+      $('#date_of_came_out').datetimepicker({
+          format: 'YYYY-MM-DD hh:mm',
+          icons: { time: 'far fa-clock' }
+      });
+  
+      $('#publication_year').datetimepicker({
+          format: 'YYYY',
+      });
+        
+      });
+  </script>  
+{% endblock content %}

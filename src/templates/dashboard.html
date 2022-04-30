@@ -73,21 +73,12 @@
     <aside class="main-sidebar sidebar-dark-primary elevation-4">
       <!-- Brand Logo -->
       <a href="#" class="brand-link">
-        <img src="#" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
-        <span class="brand-text font-weight-light">AdminLTE 3</span>
+        <span>Admin Dashboard</span>
       </a>
   
       <!-- Sidebar -->
       <div class="sidebar">
         <!-- Sidebar user (optional) -->
-        <div class="user-panel mt-3 pb-3 mb-3 d-flex">
-          <div class="image">
-            <img src="#" class="img-circle elevation-2" alt="User Image">
-          </div>
-          <div class="info">
-            <a href="#" class="d-block">Alexander Pierce</a>
-          </div>
-        </div>
   
         <!-- SidebarSearch Form -->
         <div class="form-inline">
@@ -113,24 +104,83 @@
               </a>
             </li>
             <li class="nav-item">
-              <a href="{% url 'contributor_list' %}" class="nav-link">
-                <i class="nav-icon fas fa-chart-network"></i>
-                <p>Contributors</p>
-              </a>
-            </li>
-            <li class="nav-item">
-              <a href="{% url 'category_list' %}" class="nav-link">
-                <i class="nav-icon fad fa-ballot"></i>
-                <p>Categories</p>
-              </a>
-            </li>
-            <li class="nav-item">
-              <a href="#" class="nav-link">
+              <a href="" class="nav-link">
                 <i class="nav-icon fad fa-books"></i>
                 <p>
                   Books
+                  <i class="fas fa-angle-left right"></i>
                 </p>
               </a>
+              <ul class="nav nav-treeview">
+                <li class="nav-item">
+                  <a href="{% url 'contributor_list' %}" class="nav-link">
+                    <i class="nav-icon fas fa-chart-network"></i>
+                    <p>Contributors</p>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="{% url 'category_list' %}" class="nav-link">
+                    <i class="nav-icon fad fa-ballot"></i>
+                    <p>Categories</p>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="{% url 'book_list' %}" class="nav-link">
+                    <i class="nav-icon far fa-book"></i>
+                    <p>Book</p>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="{% url 'come_out_list' %}" class="nav-link">
+                    <i class="nav-icon fad fa-inbox-out"></i>
+                    <p>Come Out Book</p>
+                  </a>
+                </li>
+              </ul>
+            </li>
+            <li class="nav-item">
+              <a href="#" class="nav-link">
+                <i class='fas fa-id-card nav-icon'></i>
+                <p>
+                  Membership
+                  <i class="fas fa-angle-left right"></i>
+                </p>
+              </a>
+              <ul class="nav nav-treeview">
+                <li class="nav-item">
+                  <a href="{% url 'type_list' %}" class="nav-link">
+                    <i class='nav-icon far fa-address-card'></i>
+                    <p>Type Of Membership</p>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="{% url 'member_list' %}" class="nav-link">
+                    <i class="nav-icon fad fa-users"></i>
+                    <p>User</p>
+                  </a>
+                </li>
+              </ul>
+            </li>
+            <li class="nav-item">
+              <a href="#" class="nav-link">
+                <i class="nav-icon far fa-laptop"></i>
+                <p>
+                  Loan Circulation
+                  <i class="fas fa-angle-left right"></i>
+                </p>
+              </a>
+              <ul class="nav nav-treeview">
+                <li class="nav-item">
+                  <a href="" class="nav-link">
+                    <p>Transaction</p>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="{% url 'transaction_search_user' %}" class="nav-link">
+                    <p>New Transaction</p>
+                  </a>
+                </li>
+              </ul>
             </li>
         </nav>
         <!-- /.sidebar-menu -->
@@ -152,6 +202,7 @@
       {% block content %}
         
       {% endblock content %}
+      
       <!-- /.content -->
     </div>
     <!-- /.content-wrapper -->
