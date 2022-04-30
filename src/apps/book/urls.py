@@ -30,4 +30,5 @@ urlpatterns = [
     path('<int:id>/exemplar/<int:exm>/delete', DeleteExemplarView.as_view(), name='exemplar_delete'),
     
     path('come_out', ListBookComeOut.as_view(), name='come_out_list'),
+    path('come_out/add', AddBookCameOutView.as_view(), name='come_out_add'),
 ]

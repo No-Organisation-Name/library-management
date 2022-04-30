@@ -1,6 +1,6 @@
 from cProfile import label
 from django import forms
-from .models import Contributor, Category, BookShelf
+from .models import Contributor, Category, BookShelf, Exemplar, ComeOutBook
 
 
 class AddContributorForm(forms.Form):
@@ -155,3 +155,19 @@ class AddStocksForm(forms.Form):
         'class': 'form-control',
         'placeholder': 'At Row'
         }))
+
+
+class AddComeOutBookForm(forms.Form):
+    id = forms.HiddenInput()
+    exemplar = forms.ModelChoiceField(label='Exemplar', queryset=Exemplar.objects.filter(status=True), widget=forms.Select(attrs={
+        'class': 'form-control'}))
+    date_of_came_out = forms.CharField(label='Date of Come Out', max_length=50, widget=forms.TextInput(attrs={
+        'class': 'form-control datetimepicker-input',
+        'data-target': '#date_of_came_out',
+        'placeholder': 'Date of Come Out',
+        'id': 'date_of_came_out'
+    }))
+    description = forms.CharField(label='Description', max_length=50, widget=forms.Textarea(attrs={
+        'class': 'form-control',
+        'placeholder': 'Description'
+    }))

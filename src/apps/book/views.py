@@ -354,3 +354,28 @@ class ListBookComeOut(View):
         return render(request, self.template_name,{
             'obj':obj
         })
+
+class AddBookCameOutView(View):
+    template_name = 'book/add_come_out_book.html'
+    def get(self, request):
+        form = AddComeOutBookForm()
+        return render(request, self.template_name,{
+            'form':form
+        })
+
+    def post(self, request):
+        form = AddComeOutBookForm(request.POST)
+        if form.is_valid():
+            print(form.cleaned_data['exemplar'])
+            print(form.cleaned_data['exemplar'].id)
+            print(type(form.cleaned_data['exemplar']))
+            come_out_book = ComeOutBook()
+            come_out_book.exemplar = form.cleaned_data['exemplar']
+            exemplar = Exemplar.objects.get(id=form.cleaned_data['exemplar'].id)
+            exemplar.status = False
+            exemplar.save()
+            come_out_book.date_of_came_out = form.cleaned_data['date_of_came_out']
+            come_out_book.save()
+            return redirect(reverse('come_out_list'))
+        else:
+            return HttpResponse(form.errors)
