@@ -1,0 +1,45 @@
+{% extends "dashboard.html" %}
+
+{% block content %}
+
+<div class="container">
+    <a href="{% url 'come_out_add' %}" class="btn btn-primary">Add</a>
+    <div class="row">
+        <div class="col">
+            <h1>List Come Out Book</h1>
+            <table class="table">
+                <thead>
+                    <th>Tittle</th>
+                    <th>Barcode</th>
+                    <th>Description</th>
+                    <th>Date Of Come Out</th>
+                    <th></th>
+                </thead>
+                <tbody>
+                    {% for o in obj %}
+                        <tr>
+                            <td>
+                                {{o.exemplar.book.title}}
+                            </td>
+                            <td>
+                                {{o.exemplar.barcode}}
+                            </td>
+                            <td>
+                                {{o.description}}
+                            </td>
+                            <td>
+                                {{o.date_of_came_out}}
+                            </td>
+                            <td>
+                                <a href="" class="btn btn-primary">Edit</a>
+                                <a href="{% url 'come_out_delete' o.id %}" class="btn btn-danger">Delete</a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+  
+{% endblock content %}
