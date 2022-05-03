@@ -1,0 +1,97 @@
+{% extends "dashboard.html" %}
+{% block content %}
+<section class="content">
+    <div class="container-fluid">
+        <h2 class="text-center display-4">Search Book</h2>
+        <form action="{% url 'admin_searching_book_result' id %}" method="POST">
+            {% csrf_token %}
+            <div class="row">
+                <div class="col-md-10 offset-md-1">
+                    <div class="row">
+                        <div class="col-2">
+                        </div>
+                        <div class="col-8">
+                            <div class="form-group">
+                                <div class="input-group input-group-lg" style="margin-top: 31px;">
+                                    {{form.any_data}}
+                                    <div class="input-group-append">
+                                        <button type="submit" class="btn btn-lg btn-default">
+                                            <i class="fa fa-search"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+        </form>
+    </div>
+    {% if member %}
+    
+    {% else %}
+      
+    {% endif %}
+    <div class="container-fluid">
+        <table class="table table-striped">
+            <thead>
+                <th>BARCODE</th>
+                <th>TITLE</th>
+                <th>Book Shelf</th>
+                <th>At Row</th>
+                <th></th>
+            </thead>
+            <tbody>
+                {% if book %}
+                    <tr>
+                        <td>
+                            {{book.barcode}}
+                        </td>
+                        <td>
+                            {{book.book.title}}
+                        </td>
+                        <td>
+                            {{book.bookshelf.name}}
+                        </td>
+                        <td>
+                            {{book.at_row}}
+                        </td>
+                        <td>
+                            <div class="form-group">
+                                <a href="{% url 'book_checkout' id book.barcode  %}" class="btn btn-primary">Checkout</a>
+                                <a href="{% url 'admin_searching_book' id %}" class="btn btn-danger">
+                                    <i class="fas fa-times"></i>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="5">
+                            <div class="alert alert-danger" style="text-align: center;">
+                                <strong>No Data Found</strong>
+                            </div>
+                        </td>
+                    </tr>
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
+</section>
+<script>
+$(function () {
+    $('#date_of_birth').datetimepicker({
+        format: 'YYYY-MM-DD',
+    });
+
+    $("#cost").maskMoney({
+      thousands: ".",
+      decimal: ",",
+      precision: 0
+    });
+      
+});
+</script>
+  
+{% endblock content %}

@@ -1,0 +1,36 @@
+{% extends "dashboard.html" %}
+{% block content %}
+<div class="row">
+    <div class="col"></div>
+    <div class="col">
+        <h1>Edit Exemplar</h1>
+        <form action="" method="POST">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="">
+                    {{form.bookshelf.label}}
+                </label>
+                {{form.bookshelf}}
+            </div>
+            <div class="form-group">
+                <label for="">
+                    {{form.barcode.label}}
+                </label>
+                {{form.barcode}}
+            </div>
+            <div class="form-group">
+                <label for="">
+                    {{form.at_row.label}}
+                </label>
+                {{form.at_row}}
+            </div>
+            <div class="form-group">
+                <a href="{% url 'exemplar_list' id %}" class="btn btn-default">Cancel</a>
+                <button class="btn btn-primary">Submit</button>
+            </div>
+        </form>
+    </div>
+    <div class="col"></div>
+</div>
+  
+{% endblock content %}
