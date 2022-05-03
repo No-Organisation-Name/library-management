@@ -7,6 +7,7 @@ from apps.membership.models import *
 from apps.book.models import Exemplar
 from django.http import HttpResponse
 from django.urls import reverse
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 import random
 import string
 import datetime
@@ -116,25 +117,38 @@ class DetailUserView(View):
     def get(self, request,id):
         try:
             member = Membership.objects.get(id=id)
-            loan_transactions = member.transactions.filter(status=True)[0]
-            total_fine = loan_transactions.fine
-            total_exemplar = loan_transactions.borrows.all().count()
+            loan_transactions = member.transactions.filter(status=True)
+            total_fine = loan_transactions[0].fine
+            total_exemplar = loan_transactions[0].borrows.all().count()
         except:
-            loan_transactions = False
             total_fine = 0
             total_exemplar = 0
 
         print(total_fine)
         print(total_exemplar)
-        if  total_exemplar < member.member_type.amount_of_book and total_fine == 0 :
+        if  total_exemplar < member.member_type.amount_of_book and total_fine <= 0 and loan_transactions.count() < 1:
             add_transaction = True
         else:
             add_transaction = False
 
-        if loan_transactions and  total_fine == 0 and total_exemplar > 0:
+        if loan_transactions.count() == 1 and  total_fine <= 0 and total_exemplar > 0:
             return_button = True
         else:
             return_button = False
+
+        if loan_transactions:
+            print("table")
+        else:
+            print("no table")
+
+        print(f'total fine : {total_fine}')
+        print(f'total exemplar : {total_exemplar}')
+        print(f"add transaction : {add_transaction}")
+        print(f"return button : {return_button}")
+        print(f"Loan Transaction {loan_transactions}")
+        print(f"Loan History {loan_transactions.filter(status=False)}")
+        print(f"Loan With Fine : {loan_transactions.filter(status=True, fine__gt=0)}")
+        print(f"id : {id}")
         return render(request, self.template_name,{
             'member': member,
             'loan_transactions': member.transactions.filter(status=True),
@@ -205,3 +219,25 @@ class ReturnTransactionView(View):
             e.exemplar.save()
 
         return redirect(reverse('transaction_detail_user', args=[f"{id}"]))
+
+
+
+class ActiveTransactionView(View):
+    template_name = 'transaction/active_transaction.html'
+
+    def get(self,request):
+        obj = Transaction.objects.filter(status=True)
+        paginator = Paginator(obj, 5)
+        page = request.GET.get('page')
+        try:
+            transactions = paginator.page(page)
+        except PageNotAnInteger:
+            transactions = paginator.page(1)
+        except EmptyPage:
+            transactions = paginator.page(paginator.num_pages)
+        return render(request, self.template_name,{
+            'transactions':transactions.object_list,
+            'transaction':transactions,
+            'range':paginator.page_range,
+            'page_now':transactions.number,
+        })

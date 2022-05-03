@@ -134,8 +134,7 @@ class ListMemberView(View):
             membership.married = form.cleaned_data['married']
             membership.job = form.cleaned_data['job']
             membership.phone_number = form.cleaned_data['phone_number']
-            my_fine = Type.objects.get(id=form.cleaned_data['member_type']).fine
-            membership.fine = my_fine
+            membership.fine = membership.member_type.fine
             membership.save()
             return redirect(reverse('member_list'))
         else:

@@ -118,7 +118,7 @@
                       <td>{{total_exemplar}}</td>
                       <td>
                         {% if return_button %}
-                        <a href="{% url 'return_transaction' id l.id%}" class="btn btn-primary">Return</a>
+                          <a href="{% url 'return_transaction' id l.id%}" class="btn btn-primary">Return</a>
                         {% endif %}
                         <a href="{% url 'detail_transactions' id %}" class="btn btn-success">Detail</a>
                       </td>
@@ -170,8 +170,11 @@
                     <td colspan="4">
                       <div class="form-group">
                         {% if loan_fine %}
-                        <a href="{% url 'return_transaction' id %}" class="btn btn-info" style="margin-left: 88%;">Paid</a>
-                   
+                          {% for l in loan_fine %}
+                        <a href="{% url 'return_transaction' id l.id %}" class="btn btn-info" style="margin-left: 88%;">Paid</a>
+
+                            
+                          {% endfor %}
                         {% endif %}
                        </div>
                     </td>

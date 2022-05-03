@@ -1,6 +1,7 @@
 from django.urls import path
 from .views import *
 urlpatterns = [
+    path('', ActiveTransactionView.as_view(), name='transaction_active'),
     path('search/user', SearchView.as_view(), name='transaction_search_user'),
     path('user/result', SearchUserView.as_view(), name='transaction_search_result'), 
     path('create/user', CreateUserView.as_view(), name='transaction_add_new_user'), 

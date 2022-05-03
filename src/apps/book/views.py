@@ -375,6 +375,7 @@ class AddBookCameOutView(View):
             exemplar.status = False
             exemplar.save()
             come_out_book.date_of_came_out = form.cleaned_data['date_of_came_out']
+            come_out_book.description = form.cleaned_data['description']
             come_out_book.save()
             return redirect(reverse('come_out_list'))
         else:
