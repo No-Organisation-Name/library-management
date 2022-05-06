@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.views import View
 from .forms import *
-from apps.transaction.models import Transaction
+from apps.transaction.models import *
 from apps.membership.forms import *
 from apps.membership.models import *
 from apps.book.models import Exemplar
@@ -12,9 +12,13 @@ import random
 import string
 import datetime
 from datetime import timedelta, date
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import PermissionRequiredMixin
 
-class SearchView(View):
+class SearchView(LoginRequiredMixin,PermissionRequiredMixin ,View):
+    permission_required = ('transaction.add_transaction')
     template_name = 'transaction/search.html'
+    login_url = '/login'
 
     def get(self, request):
         form = SearchForm(request.POST)
@@ -23,8 +27,10 @@ class SearchView(View):
         })
 
 
-class AdminSearchingBookView(View):
+class AdminSearchingBookView(LoginRequiredMixin,PermissionRequiredMixin ,View):
+    permission_required = ('transaction.add_transaction')
     template_name = 'transaction/search_book.html'
+    login_url = '/login'
 
     def get(self, request, id):
         form = SearchBookForm(request.POST)
@@ -34,8 +40,10 @@ class AdminSearchingBookView(View):
         })
 
 
-class SearchUserView(View):
+class SearchUserView(LoginRequiredMixin,PermissionRequiredMixin ,View):
+    permission_required = ('transaction.add_transaction')
     template_name='transaction/search_result.html'
+    login_url = '/login'
 
     def post(self,request):
         member_form = AddMembershipForm(request.POST)
@@ -55,8 +63,10 @@ class SearchUserView(View):
         return HttpResponse(form.errors)
 
 
-class AdminBookResultView(View):
+class AdminBookResultView(LoginRequiredMixin,PermissionRequiredMixin ,View):
+    permission_required = ('transaction.add_transaction')
     template_name='transaction/search_book_result.html'
+    login_url = '/login'
 
     def post(self,request,id):
         form = SearchBookForm(request.POST)
@@ -74,7 +84,9 @@ class AdminBookResultView(View):
             })
         return HttpResponse(form.errors)
 
-class CreateUserView(View):
+class CreateUserView(LoginRequiredMixin,PermissionRequiredMixin ,View):
+    permission_required = ('transaction.add_transaction')
+    login_url = '/login'
 
     def post(self, request):
         form = AddMembershipForm(request.POST)
@@ -111,8 +123,10 @@ class CreateUserView(View):
             return HttpResponse(form.errors)
         
 
-class DetailUserView(View):
+class DetailUserView(LoginRequiredMixin,PermissionRequiredMixin ,View):
+    permission_required = ('transaction.add_transaction')
     template_name = 'transaction/detail_user.html'
+    login_url = '/login'
 
     def get(self, request,id):
         try:
@@ -162,7 +176,9 @@ class DetailUserView(View):
         })
 
     
-class AddTransactionView(View):
+class AddTransactionView(LoginRequiredMixin,PermissionRequiredMixin ,View):
+    permission_required = ('transaction.add_transaction')
+    login_url = '/login'
 
     def get(self, request, id):
         member = Membership.objects.get(id=id)
@@ -176,9 +192,11 @@ class AddTransactionView(View):
         transaction.save()
         return redirect('transaction_detail_user',id=id)
 
-class DetailTransactionView(View):
+class DetailTransactionView(LoginRequiredMixin,PermissionRequiredMixin ,View):
     
     template_name = 'transaction/detail_transaction.html'
+    login_url = '/login'
+    permission_required = ('transaction.add_transaction')
 
     def get(self, request,id):
         exemplar = Membership.objects.get(id=id).transactions.filter(status=True)[0].borrows.all()
@@ -193,8 +211,9 @@ class DetailTransactionView(View):
         })
 
 
-from apps.transaction.models import Borrow
-class AdminCheckoutBookView(View):
+class AdminCheckoutBookView(LoginRequiredMixin,PermissionRequiredMixin ,View):
+    permission_required = ('transaction.add_transaction')
+    login_url = '/login'
 
     def get(self,request, id, bcr):
         transaction_id = Membership.objects.get(id=id).transactions.filter(status=True)[0]
@@ -207,7 +226,9 @@ class AdminCheckoutBookView(View):
         return redirect(reverse('transaction_detail_user', args=[f'{id}']))
 
 
-class ReturnTransactionView(View):
+class ReturnTransactionView(LoginRequiredMixin,PermissionRequiredMixin ,View):
+    permission_required = ('transaction.add_transaction')
+    login_url = '/login'
 
     def get(self, request, id, id_transaction):
         transaction = Transaction.objects.get(id=id_transaction)
@@ -222,8 +243,11 @@ class ReturnTransactionView(View):
 
 
 
-class ActiveTransactionView(View):
+class ActiveTransactionView(LoginRequiredMixin,PermissionRequiredMixin ,View):
+    
     template_name = 'transaction/active_transaction.html'
+    login_url = '/login'
+    permission_required = ('transaction.add_transaction')
 
     def get(self,request):
         obj = Transaction.objects.filter(status=True)
@@ -240,4 +264,20 @@ class ActiveTransactionView(View):
             'transaction':transactions,
             'range':paginator.page_range,
             'page_now':transactions.number,
+        })
+
+
+class UserDashboardView(LoginRequiredMixin,PermissionRequiredMixin ,View):
+    permission_required = [
+        ('book.view_book'),('book.view_category'),
+        ('book.view_exemplar'),('transaction.view_borrow'),
+        ('transaction.view_transaction')
+    ]
+    template_name = 'transaction/user_dashboard.html'
+    login_url = '/login'
+
+    def get(self, request, username:str):
+        user = User.objects.get(username=username)
+        return render(request, self.template_name,{
+            'user':user
         })

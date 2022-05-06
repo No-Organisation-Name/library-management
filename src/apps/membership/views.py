@@ -1,17 +1,21 @@
 from django.shortcuts import render, redirect
-#import reverse 
 from django.urls import reverse
 from .models import Type, Membership, User
 from django.views import View
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from .forms import AddTypeOfMemberForm,AddMembershipForm, EditMembershipForm
+from .forms import *
 from django.http import HttpResponse
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.models import Group
 import datetime
 import random
 import string
-class ListTypeView(View):
-    template_name = 'list_type.html'
+from django.contrib.auth.mixins import LoginRequiredMixin
 
+
+class ListTypeView(LoginRequiredMixin, View):
+    template_name = 'list_type.html'
+    login_url = '/login'
     def get(self, request):
         obj = Type.objects.all()
         paginator = Paginator(obj, 5)
@@ -47,9 +51,10 @@ class ListTypeView(View):
         return redirect(reverse('type_list'))
 
 
-class EditTypeView(View):
+class EditTypeView(LoginRequiredMixin, View):
     template_name = 'type_edit.html'
-    
+    login_url = '/login'
+
     def get(self,request, id):
         obj = Type.objects.get(id=id)
         data = {
@@ -77,15 +82,17 @@ class EditTypeView(View):
             obj.save()
         return redirect(reverse('type_list'))
 
-class DeleteTypeView(View):
+class DeleteTypeView(LoginRequiredMixin, View):
+    login_url = '/login'
     def get(self,request, id):
         obj = Type.objects.get(id=id)
         obj.delete()
         return redirect(reverse('type_list'))
 
 
-class ListMemberView(View):
+class ListMemberView(LoginRequiredMixin, View):
     template_name = 'members_list.html'
+    login_url = '/login'
 
     def get(self, request):
         obj = Membership.objects.all()
@@ -140,8 +147,9 @@ class ListMemberView(View):
         else:
             return HttpResponse(form.errors)
 
-class UpdateMemberView(View):
+class UpdateMemberView(LoginRequiredMixin, View):
     template_name = 'members_edit.html'
+    login_url = '/login'
 
     def get(self, request,id):
         member= Membership.objects.get(id=id)
@@ -196,8 +204,77 @@ class UpdateMemberView(View):
             return HttpResponse(form.errors)
         return redirect(reverse('member_list'))
 
-class DeleteMemberView(View):
+class DeleteMemberView(LoginRequiredMixin, View):
+    login_url = '/login'
+
     def get(sel,request,id):
         member = Membership.objects.get(id=id)
         member.delete()
         return redirect(reverse('member_list'))
+
+
+
+class LoginView(View):
+    template_name = 'login.html'
+
+    def get(self,request):
+        form = LoginForm()
+        if request.user.is_authenticated:
+            if Group.objects.get(name='member') in request.user.groups.all():
+                return redirect(f'/transaction/{request.user.username}')
+            elif Group.objects.get(name='admin') in request.user.groups.all():
+                print(f"{request.user.username} is admin")
+                login(request, request.user)
+                return redirect('/book')
+            else:
+                login(request, request.user)
+                return redirect('/customer_landingpage')
+        else:
+            return render(request, self.template_name,{
+                        'form':form
+                    })
+
+    def post(self, request):
+            form = LoginForm(request.POST)
+            if form.is_valid():
+                user_name = form.cleaned_data['username']
+                password = form.cleaned_data['password']
+                usr = authenticate(username=user_name, password=password)
+                try:
+                    if usr.is_authenticated:
+                        if Group.objects.get(name='member') in usr.groups.all():
+                            print(f"{user_name} is member")
+                            login(request, usr)
+                            return redirect(f'/transaction/{user_name}')
+                        elif Group.objects.get(name='admin') in usr.groups.all():
+                            print(f"{user_name} is admin")
+                            login(request, usr)
+                            return redirect('/book')
+                        else:
+                            login(request, usr)
+                            return redirect('/customer_landingpage')
+                except:
+                    return redirect('/login')
+            else:
+                return HttpResponse(form.errors)
+
+
+def custom_error_403(request, exception):
+    return render(request, '403.html')
+
+    
+class ReauthenticateView(View):
+    
+    def get(self, request):
+        if request.user.is_authenticated:
+            if Group.objects.get(name='member') in request.user.groups.all():
+                return redirect(f'/transaction/{request.user.username}')
+            elif Group.objects.get(name='admin') in request.user.groups.all():
+                print(f"{request.user.username} is admin")
+                login(request, request.user)
+                return redirect('/book')
+            else:
+                login(request, request.user)
+                return redirect('/customer_landingpage')
+        else:
+            return redirect('/login')

@@ -9,9 +9,12 @@ from django.http import HttpResponse
 import datetime
 import mysql.connector as msql
 from apps.book.models import ComeOutBook
+from django.contrib.auth.mixins import LoginRequiredMixin
 
-class ContributorListView(View):
+class ContributorListView(LoginRequiredMixin, View):
     template_name = 'contributor/contributor_list.html'
+    login_url = '/login'
+
     def get(self, request):
         obj_list = Contributor.objects.all()
         paginator = Paginator(obj_list, 5)
@@ -42,8 +45,9 @@ class ContributorListView(View):
         return redirect(reverse('contributor_list'))
 
 
-class ContributorEditView(View):
+class ContributorEditView(LoginRequiredMixin, View):
     template_name = 'contributor/contributor_edit.html'
+    login_url = '/login'
 
     def get(self, request, id):
         contributor = Contributor.objects.get(id=id)
@@ -67,15 +71,18 @@ class ContributorEditView(View):
         return redirect(reverse('contributor_list'))
 
 
-class DeleteContributorView(View):
+class DeleteContributorView(LoginRequiredMixin, View):
+    login_url = '/login'
+    
     def get(self, request, id):
         contributor = Contributor.objects.get(id=id)
         contributor.delete()
         return redirect(reverse('contributor_list'))
 
 
-class CategoryListView(View):
+class CategoryListView(LoginRequiredMixin, View):
     templates_name = 'category/category_list.html'
+    login_url = '/login'
 
     def get(self, request):
         obj_list = Category.objects.all()
@@ -104,8 +111,10 @@ class CategoryListView(View):
             category.save()
         return redirect(reverse('category_list'))
 
-class CategoryEditView(View):
+class CategoryEditView(LoginRequiredMixin, View):
     templates_name = 'category/category_edit.html'
+    login_url = '/login'
+
     def get(self, request, id):
         category = Category.objects.get(id=id)
         data = {
@@ -126,15 +135,18 @@ class CategoryEditView(View):
         return redirect(reverse('category_list'))
 
 
-class DeleteCategoryView(View):
+class DeleteCategoryView(LoginRequiredMixin, View):
+    login_url = '/login'
+
     def get(self, request, id):
         category = Category.objects.get(id=id)
         category.delete()
         return redirect(reverse('category_list'))
 
 
-class BookListView(View):
+class BookListView(LoginRequiredMixin, View):
     template_name = 'book/book_list.html'
+    login_url = '/login'
 
     def get(self, request):
         obj_list = Book.objects.all()
@@ -161,7 +173,6 @@ class BookListView(View):
         form = AddBookForm(request.POST, request.FILES)
         category = Category.objects.get(id=request.POST['category'])
         if form.is_valid():
-            print("Valid Cuy")
             book = Book()
             try:
                 contributor = Contributor.objects.get(id=form.cleaned_data['contributor'])
@@ -183,8 +194,9 @@ class BookListView(View):
         return redirect(reverse('book_list'))
 
 
-class UpdateBookView(View):
+class UpdateBookView(LoginRequiredMixin, View):
     template_name = 'book/book_edit.html'
+    login_url = '/login'
 
     def get(self, request, id):
         book = Book.objects.get(id =id)
@@ -236,14 +248,18 @@ class UpdateBookView(View):
         return redirect(reverse('book_list'))
 
 
-class DeleteBookView(View):
+class DeleteBookView(LoginRequiredMixin, View):
+    login_url = '/login'
+
     def get(self, request, id):
         book = Book.objects.get(pk=id)
         book.delete()
         return redirect(reverse('book_list'))
 
 
-class ImportBookView(View):
+class ImportBookView(LoginRequiredMixin, View):
+    login_url = '/login'
+
     def post(self, request):
         con = msql.connect(
             host='localhost', 
@@ -269,8 +285,9 @@ class ImportBookView(View):
             return HttpResponse(form.errors)
 
 
-class ListExemplareView(View):
+class ListExemplareView(LoginRequiredMixin, View):
     template_name = 'book/exemplar_list.html'
+    login_url = '/login'
 
     def get(self, request, id):
         form = AddStocksForm()
@@ -311,8 +328,9 @@ class ListExemplareView(View):
             exemplar.save()
         return redirect(reverse('exemplar_list', kwargs={'id': id}))
 
-class UpdateExemplarView(View):
+class UpdateExemplarView(LoginRequiredMixin, View):
     template_name = 'book/exemplar_edit.html'
+    login_url = '/login'
 
     def get(self, request, id, exm):
         exemplar = Exemplar.objects.get(id=exm)
@@ -337,16 +355,18 @@ class UpdateExemplarView(View):
         return redirect(reverse('exemplar_list', kwargs={'id': id}))
 
 
-class DeleteExemplarView(View):
+class DeleteExemplarView(LoginRequiredMixin, View):
+    login_url = '/login'
+
     def get(self, request, id, exm):
         exemplar = Exemplar.objects.get(id=exm)
         exemplar.delete()
         return redirect(reverse('exemplar_list', kwargs={'id': id}))
 
 
-class ListBookComeOut(View):
-    
+class ListBookComeOut(LoginRequiredMixin, View):
     template_name = 'book/come_out_book.html'
+    login_url = '/login'
     
     def get(self, request):
         obj = ComeOutBook.objects.all()
@@ -355,8 +375,10 @@ class ListBookComeOut(View):
             'obj':obj
         })
 
-class AddBookCameOutView(View):
+class AddBookCameOutView(LoginRequiredMixin, View):
     template_name = 'book/add_come_out_book.html'
+    login_url = '/login'
+
     def get(self, request):
         form = AddComeOutBookForm()
         return render(request, self.template_name,{
@@ -382,8 +404,9 @@ class AddBookCameOutView(View):
             return HttpResponse(form.errors)
 
 
-class EditComeOutBookView(View):
+class EditComeOutBookView(LoginRequiredMixin, View):
     template_name = 'book/edit_come_out_book.html'
+    login_url = '/login'
 
     def get(self, request, id):
         come_out_book = ComeOutBook.objects.get(id=id)
@@ -412,7 +435,8 @@ class EditComeOutBookView(View):
         else:
             return HttpResponse(form.errors)
 
-class DeleteComeOutBookView(View):
+class DeleteComeOutBookView(LoginRequiredMixin, View):
+    login_url = '/login'
 
     def get(self, request, id):
         obj = ComeOutBook.objects.get(id=id)

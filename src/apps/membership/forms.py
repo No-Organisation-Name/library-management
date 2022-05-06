@@ -119,3 +119,13 @@ class EditMembershipForm(forms.Form):
     address = forms.CharField(label='Address', max_length=100, widget=forms.Textarea(attrs={
         'class': 'form-control',
         'placeholder':'Address'}))  
+
+
+class LoginForm(forms.Form):
+    username = forms.CharField(label='Username', max_length=45, widget=forms.TextInput(attrs={
+        'class': 'form-control rounded-left',
+        'placeholder':'Username'}))
+    password = forms.CharField(label='Password', max_length=45, widget=forms.TextInput(attrs={
+        'class': 'form-control rounded-right',
+        'placeholder':'Password',
+        'type': 'password'}))
