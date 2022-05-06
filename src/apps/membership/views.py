@@ -259,6 +259,12 @@ class LoginView(View):
                 return HttpResponse(form.errors)
 
 
+class LogoutView(View):
+    def get(self, request):
+        logout(request)
+        return redirect('/login')                
+
+
 def custom_error_403(request, exception):
     return render(request, '403.html')
 

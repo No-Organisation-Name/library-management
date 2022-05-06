@@ -18,7 +18,7 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls import  handler403
 from django.conf.urls.static import static
-from apps.membership.views import LoginView, ReauthenticateView
+from apps.membership.views import LoginView, ReauthenticateView, LogoutView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -26,6 +26,7 @@ urlpatterns = [
     path('membership/', include('apps.membership.urls')),
     path('transaction/', include('apps.transaction.urls')),
     path('login', LoginView.as_view(), name='login'),
+    path('logout', LogoutView.as_view(), name='logout'),
     path('login/process', LoginView.as_view(), name='login_process'),
     path('reauthenticate', ReauthenticateView.as_view(), name='reauthenticate'),
 ]
