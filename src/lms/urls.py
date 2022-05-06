@@ -15,12 +15,19 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from django.conf.urls.static import static
 from django.conf import settings
+from django.conf.urls import  handler403
+from django.conf.urls.static import static
+from apps.membership.views import LoginView, ReauthenticateView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('book/', include('apps.book.urls'))
+    path('book/', include('apps.book.urls')),
+    path('membership/', include('apps.membership.urls')),
+    path('transaction/', include('apps.transaction.urls')),
+    path('login', LoginView.as_view(), name='login'),
+    path('login/process', LoginView.as_view(), name='login_process'),
+    path('reauthenticate', ReauthenticateView.as_view(), name='reauthenticate'),
 ]
-if settings.DEBUG:
-    urlpatterns += static(settings.STATIC_URL)
+handler403 = 'apps.membership.views.custom_error_403'
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
