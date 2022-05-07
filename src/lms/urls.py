@@ -19,6 +19,7 @@ from django.conf import settings
 from django.conf.urls import  handler403
 from django.conf.urls.static import static
 from apps.membership.views import LoginView, ReauthenticateView, LogoutView
+from apps.transaction.views import *
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -29,6 +30,9 @@ urlpatterns = [
     path('logout', LogoutView.as_view(), name='logout'),
     path('login/process', LoginView.as_view(), name='login_process'),
     path('reauthenticate', ReauthenticateView.as_view(), name='reauthenticate'),
+    path('<str:username>', UserDashboardView.as_view(), name='user_dashboard'),
+    path('<str:username>/search', UserSearchingBookView.as_view(), name='user_searchng_book'),
+    
 ]
 handler403 = 'apps.membership.views.custom_error_403'
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

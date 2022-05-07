@@ -229,14 +229,10 @@ class LoginView(View):
         form = LoginForm()
         if request.user.is_authenticated:
             if Group.objects.get(name='member') in request.user.groups.all():
-                return redirect(f'/transaction/{request.user.username}')
+                return redirect(reverse('user_dashboard', args=[f'{request.user.username}']))
             elif Group.objects.get(name='admin') in request.user.groups.all():
-                print(f"{request.user.username} is admin")
                 login(request, request.user)
-                return redirect('/book')
-            else:
-                login(request, request.user)
-                return redirect('/customer_landingpage')
+                return redirect(reverse('book_list'))
         else:
             return render(request, self.template_name,{
                         'form':form
@@ -251,16 +247,11 @@ class LoginView(View):
                 try:
                     if usr.is_authenticated:
                         if Group.objects.get(name='member') in usr.groups.all():
-                            print(f"{user_name} is member")
                             login(request, usr)
-                            return redirect(f'/transaction/{user_name}')
+                            return redirect(reverse('user_dashboard', args=[f'{request.user.username}']))
                         elif Group.objects.get(name='admin') in usr.groups.all():
-                            print(f"{user_name} is admin")
                             login(request, usr)
-                            return redirect('/book')
-                        else:
-                            login(request, usr)
-                            return redirect('/customer_landingpage')
+                            return redirect(reverse('book_list'))
                 except:
                     return redirect('/login')
             else:
@@ -282,13 +273,9 @@ class ReauthenticateView(View):
     def get(self, request):
         if request.user.is_authenticated:
             if Group.objects.get(name='member') in request.user.groups.all():
-                return redirect(f'/transaction/{request.user.username}')
+                return redirect(reverse('user_dashboard', args=[f'{request.user.username}']))
             elif Group.objects.get(name='admin') in request.user.groups.all():
-                print(f"{request.user.username} is admin")
                 login(request, request.user)
-                return redirect('/book')
-            else:
-                login(request, request.user)
-                return redirect('/customer_landingpage')
+                return redirect(reverse('book_list'))
         else:
             return redirect('/login')

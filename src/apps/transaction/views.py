@@ -281,3 +281,10 @@ class UserDashboardView(LoginRequiredMixin,PermissionRequiredMixin ,View):
         return render(request, self.template_name,{
             'user':user
         })
+
+
+class UserSearchingBookView(View):
+    template_name = 'book/user_search_book.html'
+
+    def get(self, request, username):
+        return render(request, self.template_name)
