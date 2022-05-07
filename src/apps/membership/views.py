@@ -11,11 +11,14 @@ import datetime
 import random
 import string
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import PermissionRequiredMixin
 
 
-class ListTypeView(LoginRequiredMixin, View):
+class ListTypeView(LoginRequiredMixin, PermissionRequiredMixin, View):
     template_name = 'list_type.html'
     login_url = '/login'
+    permission_required = ('transaction.add_transaction')
+
     def get(self, request):
         obj = Type.objects.all()
         paginator = Paginator(obj, 5)
@@ -51,9 +54,10 @@ class ListTypeView(LoginRequiredMixin, View):
         return redirect(reverse('type_list'))
 
 
-class EditTypeView(LoginRequiredMixin, View):
+class EditTypeView(LoginRequiredMixin, PermissionRequiredMixin, View):
     template_name = 'type_edit.html'
     login_url = '/login'
+    permission_required = ('transaction.add_transaction')
 
     def get(self,request, id):
         obj = Type.objects.get(id=id)
@@ -82,17 +86,19 @@ class EditTypeView(LoginRequiredMixin, View):
             obj.save()
         return redirect(reverse('type_list'))
 
-class DeleteTypeView(LoginRequiredMixin, View):
+class DeleteTypeView(LoginRequiredMixin, PermissionRequiredMixin, View):
     login_url = '/login'
+    permission_required = ('transaction.add_transaction')
     def get(self,request, id):
         obj = Type.objects.get(id=id)
         obj.delete()
         return redirect(reverse('type_list'))
 
 
-class ListMemberView(LoginRequiredMixin, View):
+class ListMemberView(LoginRequiredMixin, PermissionRequiredMixin, View):
     template_name = 'members_list.html'
     login_url = '/login'
+    permission_required = ('transaction.add_transaction')
 
     def get(self, request):
         obj = Membership.objects.all()
@@ -147,9 +153,10 @@ class ListMemberView(LoginRequiredMixin, View):
         else:
             return HttpResponse(form.errors)
 
-class UpdateMemberView(LoginRequiredMixin, View):
+class UpdateMemberView(LoginRequiredMixin, PermissionRequiredMixin, View):
     template_name = 'members_edit.html'
     login_url = '/login'
+    permission_required = ('transaction.add_transaction')
 
     def get(self, request,id):
         member= Membership.objects.get(id=id)
@@ -204,8 +211,9 @@ class UpdateMemberView(LoginRequiredMixin, View):
             return HttpResponse(form.errors)
         return redirect(reverse('member_list'))
 
-class DeleteMemberView(LoginRequiredMixin, View):
+class DeleteMemberView(LoginRequiredMixin, PermissionRequiredMixin, View):
     login_url = '/login'
+    permission_required = ('transaction.add_transaction')
 
     def get(sel,request,id):
         member = Membership.objects.get(id=id)

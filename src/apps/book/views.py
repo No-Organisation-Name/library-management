@@ -10,10 +10,12 @@ import datetime
 import mysql.connector as msql
 from apps.book.models import ComeOutBook
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import PermissionRequiredMixin
 
-class ContributorListView(LoginRequiredMixin, View):
+class ContributorListView(LoginRequiredMixin, PermissionRequiredMixin ,View):
     template_name = 'contributor/contributor_list.html'
     login_url = '/login'
+    permission_required = ('transaction.add_transaction')
 
     def get(self, request):
         obj_list = Contributor.objects.all()
@@ -45,9 +47,10 @@ class ContributorListView(LoginRequiredMixin, View):
         return redirect(reverse('contributor_list'))
 
 
-class ContributorEditView(LoginRequiredMixin, View):
+class ContributorEditView(LoginRequiredMixin, PermissionRequiredMixin ,View):
     template_name = 'contributor/contributor_edit.html'
     login_url = '/login'
+    permission_required = ('transaction.add_transaction')
 
     def get(self, request, id):
         contributor = Contributor.objects.get(id=id)
@@ -71,8 +74,9 @@ class ContributorEditView(LoginRequiredMixin, View):
         return redirect(reverse('contributor_list'))
 
 
-class DeleteContributorView(LoginRequiredMixin, View):
+class DeleteContributorView(LoginRequiredMixin, PermissionRequiredMixin ,View):
     login_url = '/login'
+    permission_required = ('transaction.add_transaction')
     
     def get(self, request, id):
         contributor = Contributor.objects.get(id=id)
@@ -80,9 +84,10 @@ class DeleteContributorView(LoginRequiredMixin, View):
         return redirect(reverse('contributor_list'))
 
 
-class CategoryListView(LoginRequiredMixin, View):
+class CategoryListView(LoginRequiredMixin, PermissionRequiredMixin ,View):
     templates_name = 'category/category_list.html'
     login_url = '/login'
+    permission_required = ('transaction.add_transaction')
 
     def get(self, request):
         obj_list = Category.objects.all()
@@ -111,9 +116,10 @@ class CategoryListView(LoginRequiredMixin, View):
             category.save()
         return redirect(reverse('category_list'))
 
-class CategoryEditView(LoginRequiredMixin, View):
+class CategoryEditView(LoginRequiredMixin, PermissionRequiredMixin ,View):
     templates_name = 'category/category_edit.html'
     login_url = '/login'
+    permission_required = ('transaction.add_transaction')
 
     def get(self, request, id):
         category = Category.objects.get(id=id)
@@ -135,8 +141,9 @@ class CategoryEditView(LoginRequiredMixin, View):
         return redirect(reverse('category_list'))
 
 
-class DeleteCategoryView(LoginRequiredMixin, View):
+class DeleteCategoryView(LoginRequiredMixin, PermissionRequiredMixin ,View):
     login_url = '/login'
+    permission_required = ('transaction.add_transaction')
 
     def get(self, request, id):
         category = Category.objects.get(id=id)
@@ -144,10 +151,11 @@ class DeleteCategoryView(LoginRequiredMixin, View):
         return redirect(reverse('category_list'))
 
 
-class BookListView(LoginRequiredMixin, View):
+class BookListView(LoginRequiredMixin, PermissionRequiredMixin ,View):
     template_name = 'book/book_list.html'
     login_url = '/login'
-
+    permission_required = ('transaction.add_transaction')
+    
     def get(self, request):
         obj_list = Book.objects.all()
         paginator = Paginator(obj_list, 5)
@@ -194,9 +202,10 @@ class BookListView(LoginRequiredMixin, View):
         return redirect(reverse('book_list'))
 
 
-class UpdateBookView(LoginRequiredMixin, View):
+class UpdateBookView(LoginRequiredMixin, PermissionRequiredMixin ,View):
     template_name = 'book/book_edit.html'
     login_url = '/login'
+    permission_required = ('transaction.add_transaction')
 
     def get(self, request, id):
         book = Book.objects.get(id =id)
@@ -248,8 +257,9 @@ class UpdateBookView(LoginRequiredMixin, View):
         return redirect(reverse('book_list'))
 
 
-class DeleteBookView(LoginRequiredMixin, View):
+class DeleteBookView(LoginRequiredMixin, PermissionRequiredMixin ,View):
     login_url = '/login'
+    permission_required = ('transaction.add_transaction')
 
     def get(self, request, id):
         book = Book.objects.get(pk=id)
@@ -257,8 +267,9 @@ class DeleteBookView(LoginRequiredMixin, View):
         return redirect(reverse('book_list'))
 
 
-class ImportBookView(LoginRequiredMixin, View):
+class ImportBookView(LoginRequiredMixin, PermissionRequiredMixin ,View):
     login_url = '/login'
+    permission_required = ('transaction.add_transaction')
 
     def post(self, request):
         con = msql.connect(
@@ -285,9 +296,10 @@ class ImportBookView(LoginRequiredMixin, View):
             return HttpResponse(form.errors)
 
 
-class ListExemplareView(LoginRequiredMixin, View):
+class ListExemplareView(LoginRequiredMixin, PermissionRequiredMixin ,View):
     template_name = 'book/exemplar_list.html'
     login_url = '/login'
+    permission_required = ('transaction.add_transaction')
 
     def get(self, request, id):
         form = AddStocksForm()
@@ -328,9 +340,10 @@ class ListExemplareView(LoginRequiredMixin, View):
             exemplar.save()
         return redirect(reverse('exemplar_list', kwargs={'id': id}))
 
-class UpdateExemplarView(LoginRequiredMixin, View):
+class UpdateExemplarView(LoginRequiredMixin, PermissionRequiredMixin ,View):
     template_name = 'book/exemplar_edit.html'
     login_url = '/login'
+    permission_required = ('transaction.add_transaction')
 
     def get(self, request, id, exm):
         exemplar = Exemplar.objects.get(id=exm)
@@ -355,8 +368,9 @@ class UpdateExemplarView(LoginRequiredMixin, View):
         return redirect(reverse('exemplar_list', kwargs={'id': id}))
 
 
-class DeleteExemplarView(LoginRequiredMixin, View):
+class DeleteExemplarView(LoginRequiredMixin, PermissionRequiredMixin ,View):
     login_url = '/login'
+    permission_required = ('transaction.add_transaction')
 
     def get(self, request, id, exm):
         exemplar = Exemplar.objects.get(id=exm)
@@ -364,9 +378,10 @@ class DeleteExemplarView(LoginRequiredMixin, View):
         return redirect(reverse('exemplar_list', kwargs={'id': id}))
 
 
-class ListBookComeOut(LoginRequiredMixin, View):
+class ListBookComeOut(LoginRequiredMixin, PermissionRequiredMixin ,View):
     template_name = 'book/come_out_book.html'
     login_url = '/login'
+    permission_required = ('transaction.add_transaction')
     
     def get(self, request):
         obj = ComeOutBook.objects.all()
@@ -375,9 +390,10 @@ class ListBookComeOut(LoginRequiredMixin, View):
             'obj':obj
         })
 
-class AddBookCameOutView(LoginRequiredMixin, View):
+class AddBookCameOutView(LoginRequiredMixin, PermissionRequiredMixin ,View):
     template_name = 'book/add_come_out_book.html'
     login_url = '/login'
+    permission_required = ('transaction.add_transaction')
 
     def get(self, request):
         form = AddComeOutBookForm()
@@ -404,9 +420,10 @@ class AddBookCameOutView(LoginRequiredMixin, View):
             return HttpResponse(form.errors)
 
 
-class EditComeOutBookView(LoginRequiredMixin, View):
+class EditComeOutBookView(LoginRequiredMixin, PermissionRequiredMixin ,View):
     template_name = 'book/edit_come_out_book.html'
     login_url = '/login'
+    permission_required = ('transaction.add_transaction')
 
     def get(self, request, id):
         come_out_book = ComeOutBook.objects.get(id=id)
@@ -435,8 +452,9 @@ class EditComeOutBookView(LoginRequiredMixin, View):
         else:
             return HttpResponse(form.errors)
 
-class DeleteComeOutBookView(LoginRequiredMixin, View):
+class DeleteComeOutBookView(LoginRequiredMixin, PermissionRequiredMixin ,View):
     login_url = '/login'
+    permission_required = ('transaction.add_transaction')
 
     def get(self, request, id):
         obj = ComeOutBook.objects.get(id=id)
