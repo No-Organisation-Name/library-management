@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.views import View
 from .forms import *
+from apps.book.forms import *
 from apps.transaction.models import *
 from apps.membership.forms import *
 from apps.membership.models import *
@@ -273,13 +274,22 @@ class UserDashboardView(LoginRequiredMixin,PermissionRequiredMixin ,View):
         ('book.view_exemplar'),('transaction.view_borrow'),
         ('transaction.view_transaction')
     ]
-    template_name = 'transaction/user_dashboard.html'
+    template_name = 'user/landing_page.html'
     login_url = '/login'
 
     def get(self, request, username:str):
         user = User.objects.get(username=username)
+        try:
+            loan_transaction = Transaction.objects.filter(user__user__username = username, status =True)
+        except:
+            pass
         return render(request, self.template_name,{
-            'user':user
+            'user':user,
+            'username':username,
+            'loan_transaction':loan_transaction,
+            'quantity': loan_transaction[0].borrows.all().count(),
+            'total_fine': loan_transaction[0].fine,
+            'loan_history':Transaction.objects.filter(user__user__username=username, status=False)
         })
 
 
@@ -287,4 +297,57 @@ class UserSearchingBookView(View):
     template_name = 'book/user_search_book.html'
 
     def get(self, request, username):
-        return render(request, self.template_name)
+        form = UserSearchBookForm(request.POST)
+        return render(request, self.template_name,{
+            'username':username,
+            'form':form,
+        })
+
+
+
+class UserBookResultView(View):
+    template_name = 'book/user_book_result.html'
+    
+    def post(self, request, username):
+        form = UserSearchBookForm(request.POST)
+        if form.is_valid():
+            try:
+                print(form)
+                print(f'Order by :{form.cleaned_data["order_by"]}')
+                print(f'Search Text :{form.cleaned_data["search_text"]}')
+                if form.cleaned_data["order_by"] == 'title':
+                    books_result = Book.objects.filter(title = form.cleaned_data["search_text"])
+                    total_stock= books_result[0].exemplars.all().count(),
+                    available_stock =  books_result[0].exemplars.filter(status=True).count(),
+                elif form.cleaned_data["order_by"] == 'barcode':
+                    books_result = Book.objects.filter(exemplars__barcode = form.cleaned_data["search_text"])
+                    total_stock= books_result[0].exemplars.all().count(),
+                    available_stock =  books_result[0].exemplars.filter(status=True).count(),
+                elif form.cleaned_data["order_by"] == 'category':
+                    books_result = Book.objects.filter(category__name = form.cleaned_data["search_text"])
+                    total_stock = [b.exemplars.all().count() for b in books_result]
+                    available_stock = [b.exemplars.filter(status=True).count() for b in books_result]
+                else:
+                    books_result = Book.objects.filter(isbn=form.cleaned_data["search_text"])
+                    total_stock = [b.exemplars.all().count() for b in books_result]
+                    available_stock = [b.exemplars.filter(status=True).count() for b in books_result]
+
+                form= UserSearchBookForm()
+            except:
+                books_result = None
+                available_stock = None
+                total_stock = None
+                form= UserSearchBookForm()
+
+            print(f"Book Result : {books_result}")
+            print(f"stock {total_stock} {type(total_stock)}")
+            print(f"stock available {available_stock} {type(total_stock)}")
+            return render(request, self.template_name,{
+                'username':username,
+                'form':form,
+                'books_result':books_result,
+                'total_stock': total_stock,
+                'available_stock': available_stock
+                })
+        else:
+            HttpResponse(form.errors)

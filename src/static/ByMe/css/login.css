@@ -6,7 +6,7 @@ body{
     padding: 0;
 }
 
-li, a, button {
+li, a {
     font-family: 'Montserrat', sans-serif !important;
     font-size: 14px !important;
     color: #eff3f6 !important;
@@ -14,13 +14,13 @@ li, a, button {
 }
 
 header {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 19px 10%;
-    background-color: #060539;
-    margin-top: -34px;
-    border-radius: 9px 9px 34px 34px;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    padding: 19px 10% !important;
+    background-color: #060539 !important;
+    margin-top: -34px !important;
+    border-radius: 9px 9px 34px 34px !important;
     box-shadow: 13px 6px 16px 0px rgb(0 0 0 / 55%);
 }
 
@@ -58,4 +58,20 @@ button:hover{
 .footer--user {
     display: flex;
     justify-content:space-around;
+}
+
+.nav-item a {
+    color: #204057 !important;
+}
+
+.member-img {
+    width: 300px;
+    height: auto;
+    margin-top: 1%;
+    margin-left: 17%;
+    border-radius: 50%;
+}
+
+.user_book_result_table, tr, td {
+    text-align: center;
 }

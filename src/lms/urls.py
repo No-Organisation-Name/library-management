@@ -32,6 +32,7 @@ urlpatterns = [
     path('reauthenticate', ReauthenticateView.as_view(), name='reauthenticate'),
     path('<str:username>', UserDashboardView.as_view(), name='user_dashboard'),
     path('<str:username>/search', UserSearchingBookView.as_view(), name='user_searchng_book'),
+    path('<str:username>/search/result', UserBookResultView.as_view(), name='search_result_book'),
     
 ]
 handler403 = 'apps.membership.views.custom_error_403'
