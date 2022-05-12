@@ -15,12 +15,29 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from django.conf.urls.static import static
 from django.conf import settings
+from django.conf.urls import  handler403
+from django.conf.urls.static import static
+from apps.membership.views import LoginView, ReauthenticateView, LogoutView
+from apps.transaction.views import *
+from apps.book.views import *
+from suka_suka.views import *
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('book/', include('apps.book.urls'))
+    path('book/', include('apps.book.urls')),
+    path('membership/', include('apps.membership.urls')),
+    path('transaction/', include('apps.transaction.urls')),
+    path('login', LoginView.as_view(), name='login'),
+    path('logout', LogoutView.as_view(), name='logout'),
+    path('login/process', LoginView.as_view(), name='login_process'),
+    path('reauthenticate', ReauthenticateView.as_view(), name='reauthenticate'),
+    path('<str:username>', UserDashboardView.as_view(), name='user_dashboard'),
+    path('<str:username>/search', UserSearchingBookView.as_view(), name='user_searchng_book'),
+    path('<str:username>/book/result', UserBookResultView.as_view(), name='search_result_book'),
+    path('<str:username>/book/<str:title>', UserBookDetailView.as_view(), name='user_exemplar_list'),
+    path('suka_suka/', include('suka_suka.urls')),
+    
 ]
-if settings.DEBUG:
-    urlpatterns += static(settings.STATIC_URL)
+handler403 = 'apps.membership.views.custom_error_403'
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
