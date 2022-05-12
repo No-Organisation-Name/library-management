@@ -191,10 +191,11 @@ class EditComeOutBookForm(forms.Form):
 
 class UserSearchBookForm(forms.Form):
     id = forms.HiddenInput()
-    order_by = forms.ChoiceField(label='Search By', choices=(('title', 'Title'), ('barcode', 'Barcode'), ('isbn', 'ISBN'), ('category', 'Category')), widget=forms.Select(attrs={
+    order_by = forms.ChoiceField(label='Search By', choices=(('all', 'All'),('title', 'Title'), ('barcode', 'Barcode'), ('isbn', 'ISBN'), ('category', 'Category')), widget=forms.Select(attrs={
         'class': 'form-control select2 select2-hidden-accessible',
         }))
     search_text = forms.CharField(label='Search', max_length=50, widget=forms.TextInput(attrs={
         'class': 'form-control form-control-lg',
-        'placeholder': 'Search'
-    }))
+        'placeholder': 'Search',
+        
+    }),required=False)

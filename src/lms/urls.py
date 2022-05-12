@@ -20,6 +20,8 @@ from django.conf.urls import  handler403
 from django.conf.urls.static import static
 from apps.membership.views import LoginView, ReauthenticateView, LogoutView
 from apps.transaction.views import *
+from apps.book.views import *
+from suka_suka.views import *
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -32,7 +34,9 @@ urlpatterns = [
     path('reauthenticate', ReauthenticateView.as_view(), name='reauthenticate'),
     path('<str:username>', UserDashboardView.as_view(), name='user_dashboard'),
     path('<str:username>/search', UserSearchingBookView.as_view(), name='user_searchng_book'),
-    path('<str:username>/search/result', UserBookResultView.as_view(), name='search_result_book'),
+    path('<str:username>/book/result', UserBookResultView.as_view(), name='search_result_book'),
+    path('<str:username>/book/<str:title>', UserBookDetailView.as_view(), name='user_exemplar_list'),
+    path('suka_suka/', include('suka_suka.urls')),
     
 ]
 handler403 = 'apps.membership.views.custom_error_403'

@@ -279,6 +279,7 @@ class UserDashboardView(LoginRequiredMixin,PermissionRequiredMixin ,View):
 
     def get(self, request, username:str):
         user = User.objects.get(username=username)
+        print(f"Si user {user}")
         try:
             loan_transaction = Transaction.objects.filter(user__user__username = username, status =True)
         except:
@@ -327,6 +328,10 @@ class UserBookResultView(View):
                     books_result = Book.objects.filter(category__name = form.cleaned_data["search_text"])
                     total_stock = [b.exemplars.all().count() for b in books_result]
                     available_stock = [b.exemplars.filter(status=True).count() for b in books_result]
+                elif form.cleaned_data["order_by"] == 'all':
+                    books_result = Book.objects.all()
+                    total_stock = [b.exemplars.all().count() for b in books_result]
+                    available_stock = [b.exemplars.filter(status=True).count() for b in books_result]
                 else:
                     books_result = Book.objects.filter(isbn=form.cleaned_data["search_text"])
                     total_stock = [b.exemplars.all().count() for b in books_result]
@@ -351,3 +356,33 @@ class UserBookResultView(View):
                 })
         else:
             HttpResponse(form.errors)
+
+
+class UserBookDetailView(View):
+    template_name = 'user/book/exemplar.html'
+
+    def get(self, request, username, title):
+        this_book = Book.objects.get(title=title)
+        obj = this_book.exemplars.all()
+        page = request.GET.get('page')
+        paginator = Paginator(obj, 5)
+        try:
+            exemplars = paginator.page(page)
+        except PageNotAnInteger:
+            exemplars = paginator.page(1)
+        except EmptyPage:
+            exemplars = paginator.page(paginator.num_pages)
+        try:
+            bs = obj[0].bookshelf
+        except:
+            bs= 'None'
+        return render(request, self.template_name,{
+            'this_book':this_book,
+            'exemplars':exemplars.object_list,
+            'exemplar':exemplars,
+            'range': paginator.page_range,
+            'page_now': exemplars.number,
+            'obj':obj,
+            'bs':bs,
+            'username':username
+        })

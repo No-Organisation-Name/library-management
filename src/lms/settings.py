@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'apps.book.templatetags.index',
     'django_extensions',
     'import_export',
     'apps.book',
@@ -44,6 +45,7 @@ INSTALLED_APPS = [
     'apps.transaction',
     "django_apscheduler",
     "apps.my_scheduler",
+    'suka_suka'
 ]
 
 MIDDLEWARE = [
