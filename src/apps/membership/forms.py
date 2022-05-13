@@ -129,3 +129,28 @@ class LoginForm(forms.Form):
         'class': 'form-control rounded-right',
         'placeholder':'Password',
         'type': 'password'}))
+
+
+
+class UserEditProfileForm(forms.Form):
+    username = forms.CharField(label ='Username', max_length=45, widget=forms.TextInput(attrs={
+        'class': 'form-control',
+        'placeholder':'Username'}))
+    email = forms.CharField(label ='Email', max_length=45, widget=forms.TextInput(attrs={
+        'class': 'form-control',
+        'placeholder':'Email'}))
+    first_name = forms.CharField(label ='First Name', max_length=45, widget=forms.TextInput(attrs={
+        'class': 'form-control',
+        'placeholder':'First Name'}))
+    last_name = forms.CharField(label ='Last Name', max_length=45, widget=forms.TextInput(attrs={
+        'class': 'form-control',
+        'placeholder':'Last Name'}))
+    phone_number = forms.CharField(label ='Phone Number', max_length=45, widget=forms.TextInput(attrs={
+        'class': 'form-control',
+        'placeholder':'Phone Number'}),required=False)
+
+    password = forms.CharField(required=False,label='Change Password', max_length=25, widget=forms.TextInput(attrs={
+        'class': 'form-control',
+        'type': 'password',
+        'placeholder':'Chanfe Password'}))
+    

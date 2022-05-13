@@ -386,3 +386,46 @@ class UserBookDetailView(View):
             'bs':bs,
             'username':username
         })
+
+
+class UserEditProfile(View):
+    template_name = 'user/edit_profile.html'
+
+    def get(self, request, username):
+        user = User.objects.get(username=username)
+        data = {
+            'username':user.username,
+            'first_name':user.first_name,
+            'last_name':user.last_name,
+            'email':user.email,
+            'phone_number':user.membership.all()[0].phone_number,
+        }
+        form = UserEditProfileForm(initial=data)
+        return render(request, self.template_name, {
+            'username':username,
+            'form':form
+        })
+
+    
+    def post(self,request,username):
+        form = UserEditProfileForm(request.POST)
+        if form.is_valid():
+            user = User.objects.get(username=username)
+            user.first_name = form.cleaned_data['first_name']
+            user.last_name = form.cleaned_data['last_name']
+            user.email = form.cleaned_data['email']
+            try:
+                if form.cleaned_data['password'] != '':
+                    user.password = form.cleaned_data['password']
+                user.save()
+                membership = Membership.objects.get(user=user)
+                membership.phone_number = form.cleaned_data['phone_number']
+            except:
+                pass
+            membership.save()
+
+            return redirect(reverse('user_dashboard', args=[f'{username}']))
+        else:
+            return HttpResponse(form.errors)
+
+
