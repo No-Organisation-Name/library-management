@@ -134,6 +134,7 @@ class ListMemberView(LoginRequiredMixin, PermissionRequiredMixin, View):
                 user.email = form.cleaned_data['email']
             except:
                 pass
+            user.groups.add(Group.objects.get(name='member'))
             user.save()
             membership = Membership()
             membership.user = user
