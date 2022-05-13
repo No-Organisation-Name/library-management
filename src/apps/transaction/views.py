@@ -294,8 +294,14 @@ class UserDashboardView(LoginRequiredMixin,PermissionRequiredMixin ,View):
         })
 
 
-class UserSearchingBookView(View):
+class UserSearchingBookView(LoginRequiredMixin, PermissionRequiredMixin, View):
     template_name = 'book/user_search_book.html'
+    login_url = '/login'
+    permission_required = [
+        ('book.view_book'),('book.view_category'),
+        ('book.view_exemplar'),('transaction.view_borrow'),
+        ('transaction.view_transaction')
+    ]
 
     def get(self, request, username):
         form = UserSearchBookForm(request.POST)
@@ -306,8 +312,14 @@ class UserSearchingBookView(View):
 
 
 
-class UserBookResultView(View):
+class UserBookResultView(LoginRequiredMixin, PermissionRequiredMixin, View):
     template_name = 'book/user_book_result.html'
+    login_url = '/login'
+    permission_required = [
+        ('book.view_book'),('book.view_category'),
+        ('book.view_exemplar'),('transaction.view_borrow'),
+        ('transaction.view_transaction')
+    ]
     
     def post(self, request, username):
         form = UserSearchBookForm(request.POST)
@@ -358,8 +370,14 @@ class UserBookResultView(View):
             HttpResponse(form.errors)
 
 
-class UserBookDetailView(View):
+class UserBookDetailView(LoginRequiredMixin, PermissionRequiredMixin, View):
     template_name = 'user/book/exemplar.html'
+    login_url = '/login'
+    permission_required = [
+        ('book.view_book'),('book.view_category'),
+        ('book.view_exemplar'),('transaction.view_borrow'),
+        ('transaction.view_transaction')
+    ]
 
     def get(self, request, username, title):
         this_book = Book.objects.get(title=title)
@@ -388,8 +406,14 @@ class UserBookDetailView(View):
         })
 
 
-class UserEditProfile(View):
+class UserEditProfile(LoginRequiredMixin, PermissionRequiredMixin, View):
     template_name = 'user/edit_profile.html'
+    login_url = '/login'
+    permission_required = [
+        ('book.view_book'),('book.view_category'),
+        ('book.view_exemplar'),('transaction.view_borrow'),
+        ('transaction.view_transaction')
+    ]
 
     def get(self, request, username):
         user = User.objects.get(username=username)
