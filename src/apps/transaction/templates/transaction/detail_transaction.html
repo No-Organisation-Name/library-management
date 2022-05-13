@@ -1,0 +1,49 @@
+{% extends "dashboard.html" %}
+{% block content %}
+<div class="container">
+  <div class="row">
+      <a href="{% url 'transaction_detail_user' id %}" class="btn cancel-purple">Cancel</a>
+    <div class="col">
+      
+      <table class="table table-striped">
+        <thead>
+          <th>Title</th>
+          <th>Barcode</th>
+          <th>Chekout at</th>
+          <th>Due Date</th>
+            {% if add_exemplar %}
+            <th>
+              <a href="{% url 'admin_searching_book' id %}" class="btn btn-primary">
+                <i class="fas fa-plus"></i>
+              </a>
+            </th>
+            {% endif %}
+        </thead>
+        <tbody>
+          {% for e in exemplar %}
+            <tr>
+              <td>
+                {{e.exemplar.book.title}}
+              </td>
+              <td>
+                {{e.exemplar.barcode}}
+              </td>
+              <td>
+                {{e.create_at}}
+              </td>
+              <td>
+                {{e.transaction.date_return}}
+              </td>
+              {% if add_exemplar %}
+                <td></td>
+              {% endif %}
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+              
+  
+{% endblock content %}
