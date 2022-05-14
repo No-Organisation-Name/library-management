@@ -33,4 +33,6 @@ urlpatterns = [
     path('come_out/add', AddBookCameOutView.as_view(), name='come_out_add'),
     path('come_out/<int:id>/delete', DeleteComeOutBookView.as_view(), name='come_out_delete'),
     path('come_out/<int:id>/edit', EditComeOutBookView.as_view(), name='come_out_edit'),
+    
+    path('bookshelf', BookshelfView.as_view(), name='bookshelf_list'),
 ]

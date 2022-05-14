@@ -199,3 +199,19 @@ class UserSearchBookForm(forms.Form):
         'placeholder': 'Search',
         
     }),required=False)
+
+
+class BookShelfForm(forms.Form):
+    name = forms.CharField(label='Name', widget=forms.TextInput(attrs={
+        'class': 'form-control',
+        'placeholder': 'Name'
+    }))
+    number = forms.CharField(label='Number', widget=forms.TextInput(attrs={
+        'class': 'form-control',
+        'placeholder': 'Number'
+        }))
+    row = forms.CharField(label='Row', widget=forms.TextInput(attrs={
+        'class': 'form-control',
+        'placeholder': 'Row'
+        }))
+        

@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.views import View
-from .models import Contributor, Category, Book, Exemplar
+from .models import Contributor, Category, Book, Exemplar, BookShelf
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from .forms import *
 from tablib import Dataset
@@ -462,3 +462,28 @@ class DeleteComeOutBookView(LoginRequiredMixin, PermissionRequiredMixin ,View):
         obj.exemplar.save()
         obj.delete()
         return redirect(reverse('come_out_list'))
+
+
+    
+class BookshelfView(View):
+    template_name = 'book/list_bookshelf.html'
+    login_url = '/login'
+
+    def get(self, request):
+        obj_list = BookShelf.objects.all()
+        paginator = Paginator(obj_list, 5)
+        page = request.GET.get('page')
+        form = BookShelfForm(request.POST)
+        try:
+            bookshelf = paginator.page(page)
+        except PageNotAnInteger:
+            bookshelf = paginator.page(1)
+        except EmptyPage:
+            bookshelf = paginator.page(paginator.num_pages)
+        return render(request, self.template_name, {
+            'bookshelfs': bookshelf.object_list,
+            'bookshelf': bookshelf,
+            'range': paginator.page_range,
+            'page_now':bookshelf.number,
+            'form': form,
+        })
