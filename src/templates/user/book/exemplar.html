@@ -1,0 +1,165 @@
+{% extends "user/dashboard.html" %}
+
+{% block content %}
+<div class="row">
+    <div class="col-4">
+        <img src="{{this_book.image.url}}" alt="" style="width: 300px; height: auto;">
+    </div>
+    <div class="col-6">
+        <div class="row">
+            <a href="{% url 'user_searchng_book' username%}" style="margin-left: 88%; margin-bottom: 15px;" class="btn btn-danger cancel-purple"><i class="fas fa-window-close"></i></a>
+            <table class="table table-striped">
+              <h1 style="text-align: center; margin-left: 16%;"> {{this_book.title}} </h1>
+                <tbody>
+                    <tr>
+                        <td>Description</td>
+                        <td> : </td>
+                        <td>{{this_book.description}}</td>
+                    </tr>
+                    <tr>
+                        <td>Publisher</td>
+                        <td> : </td>
+                        <td>{{this_book.publisher}}</td>
+                    </tr>
+                    <tr>
+                        <td>Language</td>
+                        <td> : </td>
+                        <td>{{this_book.language}}</td>
+                    </tr>
+                    <tr>
+                        <td>ISBN</td>
+                        <td> : </td>
+                        <td>{{this_book.isbn}}</td>
+                    </tr>
+                    <tr>
+                        <td>Publication Year</td>
+                        <td> : </td>
+                        <td>{{this_book.publication_year}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="row">
+            <div class="col">
+                <div class="info-box">
+                    <span class="info-box-icon bg-info"><i class="far fa-cubes"></i></span>
+                    <div class="info-box-content">
+                      <span class="info-box-text">Stock</span>
+                      <span class="info-box-number">{{obj.count}}</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="info-box">
+                    <span class="info-box-icon bg-info" style="background-color: #ff861e!important;"><i class="fas fa-cabinet-filing"></i></span>
+                    <div class="info-box-content">
+                      <span class="info-box-text">Bookshelf</span>
+                      <span class="info-box-number">{{bs}}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row" style="margin-top:35px">
+  <div class="col-1"></div>
+    <div class="col">
+        <table class="table table-hover text-nowrap">
+            <thead style="text-align:center;background-color: #0a648f;color: white;">
+                <th>BARCODE</th>
+                <th>TITTLE</th>
+                <th>BOOK SHELF</th>
+                <th>AT ROW</th>
+                <th></th>
+                <th></th>
+            </thead>
+            <tbody style="text-align:center;">
+                {% if obj %}
+                    {% for o in exemplars %}
+                    <tr>
+                        <td>{{o.barcode}}</td>
+                        <td>{{o.book}}</td>
+                        <td>{{o.bookshelf}}</td>
+                        <td>{{o.at_row}}</td>
+                        <td>
+                            {% if o.status %}
+                                <p style="color: #1ca10c;"><i class="far fa-check"></i> Avaliable</p>
+                            {% else %}
+                                <p>Kosong</p>
+                            {% endif %}
+                        </td>
+                        <td>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                {% else %}
+                    <tr>
+                        <td colspan="5">No data</td>
+                    </tr>
+                {% endif %}
+            </tbody>
+        </table>
+        <div class="card-footer clearfix">
+            <ul class="pagination pagination-sm m-0 float-right">
+              {% if exemplar.has_previous %}
+              <li class="page-item"><a class="page-link" href="?page={{exemplar.number|add:'-1'}}">&laquo;</a></li>
+              {% else %}
+              <li class="page-item disabled"><a class="page-link" href="#">&laquo;</a></li>
+              {% endif %}
+              {% for i in range %}
+                {% if i == exemplar.number %}
+                <li class="page-item active"><a class="page-link" href="?page={{i}}">
+                  {{i}}
+                </a></li>
+                {% else %}
+                <li class="page-item"><a class="page-link" href="?page={{i}}">
+                  {{i}}
+                </a></li>
+                {% endif %}
+              {% endfor %}
+              {% if exemplar.has_next %}
+              <li class="page-item"><a class="page-link" href="?page={{exemplar.number|add:'+1'}}">&raquo;</a></li>
+              {% else %}
+              <li class="page-item disabled"><a class="page-link" href="#">&raquo;</a></li>
+              {% endif %}
+            </ul>
+          </div>
+    </div>
+</div>
+<div class="modal fade" id="modal-lg">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title" style="text-align:center">New Exepmplar</h4>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form action="" method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="form-group">
+              <label for="">{{form.bookshelf.label}}</label>
+              {{form.bookshelf}}
+            </div>
+            <div class="form-group">
+              <label for="">{{form.barcode.label}}</label>
+              {{form.barcode}}
+            </div>
+            <div class="form-group">
+                <label for="">{{form.at_row.label}}</label>
+                {{form.at_row}}
+              </div>
+            <div class="modal-footer justify-content-between">
+              <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+              <button type="submit" class="btn btn-primary">Save</button>
+            </div>
+          </form>
+        </div>
+        
+        
+      </div>
+      <!-- /.modal-content -->
+    </div>
+  
+{% endblock content %}

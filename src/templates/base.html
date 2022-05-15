@@ -10,6 +10,12 @@
     {% block css %}
       
     {% endblock css %}
+
+
+    {% include "js.html" %}
+    {% block js %}
+      
+    {% endblock js %}
     
 </head>
 <body>
@@ -18,9 +24,6 @@
       
         {% endblock main %}
     </div>
-    {% include "js.html" %}
-    {% block js %}
-      
-    {% endblock js %}
+
 </body>
 </html>
