@@ -1,3 +1,4 @@
+from tempfile import template
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.views import View
@@ -497,3 +498,35 @@ class BookshelfView(View):
             bookshelf.row = form.cleaned_data['row']
             bookshelf.save()
         return redirect(reverse('bookshelf_list'))
+
+
+class BookShelfEditView(LoginRequiredMixin, PermissionRequiredMixin ,View):
+    template_name = 'book/bookshelf_edit.html'
+    login_url = '/login'
+    permission_required = ()
+
+    def get(self, request, id):
+        obj = BookShelf.objects.get(id=id)
+        data = {
+            'name': obj.name,
+            'number': obj.number,
+            'row': obj.row,
+        }
+        form = BookShelfForm(initial=data)
+        return render(request, self.template_name, {
+            'form':form,
+            'name':obj.name,
+            'id':id,
+        })
+
+    def post(self, request, id):
+        form = BookShelfForm(request.POST)
+        if form.is_valid():
+            obj = BookShelf.objects.get(id=id)
+            obj.name = form.cleaned_data['name']
+            obj.number = form.cleaned_data['number']
+            obj.row = form.cleaned_data['row']
+            obj.save()
+            return redirect(reverse('bookshelf_list'))
+        else:
+            return HttpResponse(form.errors)
