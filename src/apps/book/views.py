@@ -503,7 +503,7 @@ class BookshelfView(View):
 class BookShelfEditView(LoginRequiredMixin, PermissionRequiredMixin ,View):
     template_name = 'book/bookshelf_edit.html'
     login_url = '/login'
-    permission_required = ()
+    permission_required = ('transaction.add_transaction')
 
     def get(self, request, id):
         obj = BookShelf.objects.get(id=id)
@@ -530,3 +530,14 @@ class BookShelfEditView(LoginRequiredMixin, PermissionRequiredMixin ,View):
             return redirect(reverse('bookshelf_list'))
         else:
             return HttpResponse(form.errors)
+
+
+
+class BookShelfDeleteView(LoginRequiredMixin, PermissionRequiredMixin ,View):
+    login_url = '/login'
+    permission_required = ('transaction.add_transaction')
+    
+    def get(self, request, id):
+        obj = BookShelf.objects.get(id=id)
+        obj.delete()
+        return redirect(reverse('bookshelf_list'))

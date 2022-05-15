@@ -37,4 +37,5 @@ urlpatterns = [
     path('bookshelf', BookshelfView.as_view(), name='bookshelf_list'),
     path('bookshelf/save', BookshelfView.as_view(), name='bookshelf_add'),
     path('bookshelf/<str:id>/edit', BookShelfEditView.as_view(), name='bookshelf_edit'),
+    path('bookshelf/<str:id>/delete', BookShelfDeleteView.as_view(), name='bookshelf_delete'),
 ]
