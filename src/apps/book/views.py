@@ -487,3 +487,13 @@ class BookshelfView(View):
             'page_now':bookshelf.number,
             'form': form,
         })
+    
+    def post(self, request):
+        form = BookShelfForm(request.POST)
+        if form.is_valid():
+            bookshelf = BookShelf()
+            bookshelf.name = form.cleaned_data['name']
+            bookshelf.number = form.cleaned_data['number']
+            bookshelf.row = form.cleaned_data['row']
+            bookshelf.save()
+        return redirect(reverse('bookshelf_list'))
